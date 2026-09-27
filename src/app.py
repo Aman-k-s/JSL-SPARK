@@ -183,15 +183,6 @@ conf_threshold = st.sidebar.slider("Detection Confidence Cutoff", min_value=0.10
 enable_gradcam = st.sidebar.checkbox("Compute Grad-CAM Activation Heatmap", value=False)
 anomaly_threshold = st.sidebar.slider("Out-of-Distribution Sensitivity", min_value=0.40, max_value=0.90, value=0.65, step=0.05)
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### Knowledge Base Specification")
-st.sidebar.markdown("""
-- **KB Version**: `1.1 (Tuhin Curated)`
-- **Passages**: `48 Curated Records`
-- **Defect Classes**: `6 NEU Classes`
-- **Sourced Citations**: `11 Academic / Technical Sources`
-- **Diagnostic Policy**: Probable-origin hypotheses with recommended investigation actions
-""")
 
 # Main Header
 st.markdown('<div class="header-title">Hot-Rolled Steel Surface Quality & Root-Cause Platform</div>', unsafe_allow_html=True)
