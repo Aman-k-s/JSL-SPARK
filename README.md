@@ -7,7 +7,6 @@
 [![Framework](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit)](https://streamlit.io/)
 [![Presentation](https://img.shields.io/badge/Slide%20Deck-Google%20Drive-4285F4?logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1-RZ6eYCOYMQSU7XvfYYbCbSNKjrXydqx/view?usp=sharing)
 [![Demo Video](https://img.shields.io/badge/Demo%20Video-YouTube-red?logo=youtube&logoColor=white)](https://youtu.be/r08QByG-3Pk)
-[![License](https://img.shields.io/badge/License-Proprietary%20%2F%20JSL-lightgrey)]()
 
 An automated end-to-end industrial inspection and root-cause analysis platform for steel strip surface defects. Built on fine-tuned **YOLOv8** object detection, **Temperature Scaling** statistical calibration, **morphological defect fingerprinting**, **ChromaDB vector retrieval** over peer-reviewed metallurgical failure literature, deterministic **operational decisioning**, **One-Class SVM anomaly detection**, and a conversational **metallurgical RAG assistant**.
 
@@ -34,9 +33,6 @@ An automated end-to-end industrial inspection and root-cause analysis platform f
 6. [Operational Decision Matrix](#operational-decision-matrix)
 7. [Repository & Codebase Structure](#repository--codebase-structure)
 8. [Installation & Local Quickstart](#installation--local-quickstart)
-9. [Streamlit Cloud Deployment Guide](#streamlit-cloud-deployment-guide)
-10. [Test Suite Execution](#test-suite-execution)
-11. [Authors & Attribution](#authors--attribution)
 
 ---
 
@@ -308,51 +304,3 @@ streamlit run src/app.py
 Open your browser at `http://localhost:8501`.
 
 ---
-
-## Streamlit Cloud Deployment Guide
-
-This repository is pre-configured for zero-friction continuous deployment on **Streamlit Cloud**:
-
-1. **Repository Link:** Connect your GitHub account and select `Aman-k-s/JSL-SPARK`.
-2. **Main File Path:** Set to `src/app.py`.
-3. **Headless Linux Support:** The repository includes `packages.txt` (`libgl1`, `libglib2.0-0`) and `requirements.txt` (`opencv-python-headless`) to ensure seamless execution on cloud containers without display servers.
-4. **Secrets Configuration:**
-   In your Streamlit Cloud Dashboard under **Settings → Secrets**, add your Groq key:
-   ```toml
-   GROQ_API_KEY = "gsk_your_actual_groq_api_key_here"
-   ```
-
----
-
-## Test Suite Execution
-
-Validate all platform modules with the automated test suite:
-
-```bash
-# Run Vision & Characterization Tests
-python tests/test_phase3.py
-
-# Run Vector RAG & Groq Synthesis Tests
-python tests/test_phase4.py
-
-# Run Operational Decision Engine Tests
-python tests/test_phase5.py
-
-# Run Complete End-to-End Test Suite across Real Specimens
-python tests/test_end_to_end.py
-```
-
-When all tests pass, the output displays:
-```
-=====================================================================================
-ALL 4 REAL TEST IMAGES PASSED END-TO-END PIPELINE VERIFICATION!
-=====================================================================================
-```
-
----
-
-## Authors & Attribution
-
-- **Platform Architecture & Development:** [Aman-k-s](https://github.com/Aman-k-s) (`aks211531@gmail.com`)
-- **Domain Literature & Failure Mode Evidence:** Curated metallurgical failure passages and technical sources (`S1`–`S11`).
-- **Benchmark Dataset:** NEU-DET (Northeastern University Surface Defect Database).
