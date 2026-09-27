@@ -1,21 +1,33 @@
 """
 Module: src/diagnose.py
-Description: Generates metallurgical root-cause diagnosis grounded strictly in retrieved knowledge base passages.
-             Uses Groq LLM (e.g. llama-3.3-70b-versatile / llama-3.1-8b-instant) with strict anti-hallucination prompting.
+Description: Generates metallurgical probable-origin hypothesis and recommended investigation actions
+             strictly grounded in Tuhin's 48 curated knowledge base passages.
+             Adheres to Tuhin's diagnostic policy: avoids declaring definitive root causes from images alone.
 Inputs: fingerprint (dict from characterize.py)
-Outputs: dict with {"probable_origin": str, "cited_passage_id": str, "confidence": float, "retrieved_passages": list}
-# OWNER: Aman (temporary, will hand off to Tuhin)
+Outputs: dict with probable_origin, probable_origin_hypothesis, recommended_investigation,
+         cited_passage_id, source_ids, evidence_level, confidence, retrieved_passages.
+# OWNER: Aman & Tuhin
 """
 
 import os
+import sys
 import json
 import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv
 
+# Ensure project root is in sys.path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+# Ensure UTF-8 console output on Windows
+if sys.platform.startswith("win"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 # Load .env file from workspace root if present
-ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
+ENV_PATH = PROJECT_ROOT / ".env"
 load_dotenv(dotenv_path=ENV_PATH)
 
 from src.kb.retrieve import retrieve
@@ -40,7 +52,7 @@ def build_query(fingerprint: Dict[str, Any]) -> str:
         f"spatial location is at the {location} of the strip, "
         f"covering {area_pct:.1f}% affected surface area with {severity} severity, "
         f"occurring in an {pattern} pattern. "
-        f"Metallurgical root causes, roll condition, scale, inclusions, or mechanical mill origin."
+        f"Defect mechanism, roll wear, guide interaction, scale formation, or non-metallic inclusion origin."
     )
     return query
 
@@ -68,7 +80,6 @@ def _call_groq_llm(system_prompt: str, user_prompt: str) -> Optional[str]:
         from groq import Groq
         client = Groq(api_key=api_key)
         
-        # Models available on this account: openai/gpt-oss-120b, openai/gpt-oss-20b, qwen/qwen3.8-27b
         models_to_try = [
             "openai/gpt-oss-120b",
             "openai/gpt-oss-20b",
@@ -83,13 +94,12 @@ def _call_groq_llm(system_prompt: str, user_prompt: str) -> Optional[str]:
                         {"role": "user", "content": user_prompt}
                     ],
                     temperature=0.1,
-                    max_tokens=400,
+                    max_tokens=500,
                     response_format={"type": "json_object"}
                 )
                 if response and response.choices and len(response.choices) > 0:
                     return response.choices[0].message.content
-            except Exception as e:
-                # Try next model in sequence
+            except Exception:
                 continue
     except Exception as e:
         print(f"Groq API call encountered: {e}")
@@ -101,101 +111,119 @@ def diagnose(
     k: int = 3
 ) -> Dict[str, Any]:
     """
-    Diagnose metallurgical origin using retrieved passages and strict grounded reasoning.
+    Diagnose metallurgical origin hypothesis and recommended investigation action using Tuhin's KB.
 
-    Args:
-        fingerprint: Dict with defect metrics from characterize.py.
-        k: Number of candidate passages to retrieve.
-
-    Returns:
-        Dict:
-            - probable_origin: Grounded metallurgical diagnosis statement
-            - cited_passage_id: Exact passage ID cited (e.g. 'SCR-001')
-            - confidence: Confidence derived directly from vector similarity score (0.0 - 1.0)
-            - retrieved_passages: Top-k passages with scores
-            - query_used: Natural language query passed to retrieval
+    Policy Constraints (from Tuhin's Diagnostic Policy):
+    - Output a probable-origin hypothesis, not a definitive root-cause claim, from visual evidence alone.
+    - Always cite the retrieved passage ID and technical source IDs.
+    - Recommend concrete plant investigation actions to validate the mechanism.
+    - Confidence derived directly from vector similarity score (0.0 - 1.0).
     """
     query = build_query(fingerprint)
-    defect_class = fingerprint.get("class")
+    defect_class = fingerprint.get("class", "").replace("-", "_")
     
     # Retrieve top passages from ChromaDB
     retrieved = retrieve(query, k=k, defect_class_filter=defect_class)
     if not retrieved:
-        # If class-filtered retrieval yields nothing, retrieve globally
         retrieved = retrieve(query, k=k)
 
     if not retrieved:
         return {
             "probable_origin": "No matching metallurgical knowledge base passages found to support a diagnosis.",
+            "probable_origin_hypothesis": "No matching metallurgical knowledge base passages found to support a diagnosis.",
+            "recommended_investigation": "Perform standard visual inspection and review recent coil genealogy.",
             "cited_passage_id": "NONE",
+            "source_ids": [],
+            "evidence_level": "none",
+            "source_citations": "Unspecified",
             "confidence": 0.0,
             "retrieved_passages": [],
             "query_used": query
         }
 
-    # Best similarity score from retrieval provides the confidence score (per requirements)
     top_score = retrieved[0]["score"]
 
-    # Prepare context for LLM
+    # Build context for LLM with Tuhin's passages and sources
     context_str = "\n\n".join([
-        f"[Passage ID: {p['id']}]\nClass: {p['defect_class']}\nSource: {p['source']}\nContent: {p['text']}"
+        f"[Passage ID: {p['id']}]\n"
+        f"Relation Type: {p.get('relation_type', '')} | Evidence Level: {p.get('evidence_level', '')}\n"
+        f"Source IDs: {p.get('source_ids', [])} | References: {p.get('source', '')}\n"
+        f"Passage Content: {p['text']}\n"
+        f"Diagnostic Guidance: {p.get('diagnostic_use', '')}"
         for p in retrieved
     ])
 
     system_prompt = (
-        "You are an expert metallurgical failure diagnosis system for hot-rolled steel.\n"
-        "STRICT CONSTRAINTS:\n"
+        "You are an expert metallurgical quality diagnostic system for hot-rolled steel manufacturing.\n"
+        "STRICT CONSTRAINTS & DIAGNOSTIC POLICY:\n"
         "1. Answer ONLY using the facts provided in the passages below.\n"
-        "2. Do NOT invent, assume, or extrapolate any mechanisms or statistics.\n"
-        "3. You MUST cite which passage ID you used as the primary basis.\n"
-        "4. If the provided passages do NOT support a confident answer, say so explicitly instead of guessing.\n"
-        "5. Return your answer ONLY as a JSON object with keys:\n"
-        "   \"probable_origin\": (concise 1-3 sentence metallurgical root-cause explanation),\n"
-        "   \"cited_passage_id\": (the exact passage ID string cited, e.g. 'SCR-001')\n"
+        "2. Do NOT declare a definitive root cause from visual appearance alone. Output a PROBABLE-ORIGIN HYPOTHESIS using cautious language ('consistent with', 'probable origin', 'requires validation').\n"
+        "3. Provide a concrete RECOMMENDED INVESTIGATION action (e.g. check descaling pressure, inspect roll barrel, check side guides, slab scarfing logs).\n"
+        "4. You MUST cite which passage ID you used as the primary basis (e.g. 'SCR-01', 'RIS-07', 'CRZ-02').\n"
+        "5. Return your answer strictly as a JSON object with keys:\n"
+        "   \"probable_origin_hypothesis\": (1-3 sentences stating the probable mechanism consistent with visual features),\n"
+        "   \"recommended_investigation\": (concrete plant/lab investigation action to validate root cause),\n"
+        "   \"cited_passage_id\": (the exact passage ID string cited),\n"
+        "   \"alternative_hypotheses\": (secondary plausible mechanism if applicable, or 'None')\n"
     )
 
     user_prompt = (
-        f"Defect Fingerprint:\n{json.dumps(fingerprint, indent=2)}\n\n"
-        f"Available Metallurgical Passages:\n{context_str}\n\n"
-        f"Determine the probable metallurgical origin and cite the exact passage ID."
+        f"Specimen Fingerprint Metrics:\n{json.dumps(fingerprint, indent=2)}\n\n"
+        f"Retrieved Metallurgical Passages from Knowledge Base:\n{context_str}\n\n"
+        f"Formulate the probable-origin hypothesis and recommended investigation action strictly from the passages above."
     )
 
     llm_output_raw = _call_groq_llm(system_prompt, user_prompt)
     
-    probable_origin = None
-    cited_passage_id = None
+    hypothesis = None
+    investigation = None
+    cited_id = None
+    alt_hyp = None
 
     if llm_output_raw:
         try:
             data = json.loads(llm_output_raw)
-            probable_origin = data.get("probable_origin")
-            cited_passage_id = data.get("cited_passage_id")
+            hypothesis = data.get("probable_origin_hypothesis") or data.get("probable_origin")
+            investigation = data.get("recommended_investigation")
+            cited_id = data.get("cited_passage_id")
+            alt_hyp = data.get("alternative_hypotheses")
         except Exception:
-            # Fallback regex extraction if raw json formatting was slightly off
             id_match = re.search(r'"cited_passage_id":\s*"([^"]+)"', llm_output_raw)
-            origin_match = re.search(r'"probable_origin":\s*"([^"]+)"', llm_output_raw)
             if id_match:
-                cited_passage_id = id_match.group(1)
-            if origin_match:
-                probable_origin = origin_match.group(1)
+                cited_id = id_match.group(1)
+            hyp_match = re.search(r'"probable_origin_hypothesis":\s*"([^"]+)"', llm_output_raw)
+            if hyp_match:
+                hypothesis = hyp_match.group(1)
+            inv_match = re.search(r'"recommended_investigation":\s*"([^"]+)"', llm_output_raw)
+            if inv_match:
+                investigation = inv_match.group(1)
 
-    # Fallback to direct top retrieved passage if LLM API was unreachable
-    if not probable_origin or not cited_passage_id:
+    # Fallback to direct top retrieved passage if LLM API is unavailable
+    if not hypothesis or not cited_id:
         top_passage = retrieved[0]
-        cited_passage_id = top_passage["id"]
-        probable_origin = (
-            f"Based on grounded passage {top_passage['id']}, this defect is attributed to: "
-            f"{top_passage['text']}"
-        )
+        cited_id = top_passage["id"]
+        hypothesis = f"Visual features are consistent with mechanism described in passage [{cited_id}]: {top_passage['text']}"
+        investigation = f"Validate via operational audit: {top_passage.get('diagnostic_use', 'Inspect roll condition and process parameters.')}"
 
-    # Validate that cited_passage_id matches one of the retrieved passages
+    # Ensure cited_id exists in retrieved passages, else default to top passage
     valid_ids = [p["id"] for p in retrieved]
-    if cited_passage_id not in valid_ids:
-        cited_passage_id = retrieved[0]["id"]
+    if cited_id not in valid_ids:
+        cited_id = retrieved[0]["id"]
+
+    matched_p = next((p for p in retrieved if p["id"] == cited_id), retrieved[0])
+    source_ids = matched_p.get("source_ids", [])
+    evidence_level = matched_p.get("evidence_level", "supported_inference")
+    citations = matched_p.get("source", "Technical Metallurgy Literature")
 
     return {
-        "probable_origin": probable_origin,
-        "cited_passage_id": cited_passage_id,
+        "probable_origin": hypothesis,
+        "probable_origin_hypothesis": hypothesis,
+        "recommended_investigation": investigation or "Review roll wear logs and descaling records.",
+        "alternative_hypotheses": alt_hyp or "None documented in active passages.",
+        "cited_passage_id": cited_id,
+        "source_ids": source_ids,
+        "evidence_level": evidence_level,
+        "source_citations": citations,
         "confidence": top_score,
         "retrieved_passages": retrieved,
         "query_used": query
@@ -204,17 +232,18 @@ def diagnose(
 
 if __name__ == "__main__":
     sample_fp = {
-        "class": "scratches",
-        "morphology": "elongated",
-        "aspect_ratio": 6.7,
+        "class": "rolled-in_scale",
+        "morphology": "compact",
+        "aspect_ratio": 1.9,
         "location": "center",
-        "affected_area_pct": 14.8,
-        "severity": "High",
+        "affected_area_pct": 9.4,
+        "severity": "Medium",
         "pattern": "repetitive"
     }
-    print("Testing diagnose() on sample scratch fingerprint...")
+    print("Testing diagnose() with Tuhin's 48-passage KB...")
     res = diagnose(sample_fp)
-    print("\nDIAGNOSIS RESULT:")
-    print("Cited Passage ID:", res["cited_passage_id"])
-    print("Confidence (from retrieval):", res["confidence"])
-    print("Probable Origin:", res["probable_origin"])
+    print("\nPROBABLE-ORIGIN HYPOTHESIS:\n", res["probable_origin_hypothesis"])
+    print("\nRECOMMENDED INVESTIGATION:\n", res["recommended_investigation"])
+    print(f"\nCITED PASSAGE: [{res['cited_passage_id']}] (Confidence: {res['confidence']:.4f})")
+    print(f"SOURCE IDS: {res['source_ids']} | LEVEL: {res['evidence_level']}")
+    print(f"CITATIONS: {res['source_citations']}")

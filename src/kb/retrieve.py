@@ -1,8 +1,11 @@
 """
 Module: src/kb/retrieve.py
 Description: Vector similarity retrieval module over the metallurgical ChromaDB index.
+             Returns top-k passages with evidence levels, source IDs, and relation types.
 Inputs: query (str), optional k (int, default=3), optional defect_class_filter (str)
-Outputs: list of dicts with {"text": str, "source": str, "score": float, "id": str, "defect_class": str}
+Outputs: list of dicts with {"id": str, "defect_class": str, "text": str, "source": str,
+                            "source_ids": list, "evidence_level": str, "relation_type": str,
+                            "diagnostic_use": str, "score": float}
 # OWNER: Ravi (built by Aman for now)
 """
 
@@ -27,7 +30,6 @@ def _get_resources():
     global _CLIENT, _COLLECTION, _EMBEDDER
     if _CLIENT is None:
         if not CHROMA_DIR.exists():
-            # If index not yet built, build it now
             from src.kb.build_index import build_index
             build_index()
 
@@ -51,7 +53,19 @@ def retrieve(
         defect_class_filter: Optional defect class name to narrow search.
 
     Returns:
-        List of dicts: [{"text": str, "source": str, "score": float, "id": str, "defect_class": str}]
+        List of dicts: [
+            {
+                "id": str,
+                "defect_class": str,
+                "text": str,
+                "source": str,
+                "source_ids": list,
+                "evidence_level": str,
+                "relation_type": str,
+                "diagnostic_use": str,
+                "score": float
+            }
+        ]
     """
     collection, embedder = _get_resources()
 
@@ -59,14 +73,23 @@ def retrieve(
 
     where_filter = None
     if defect_class_filter:
-        where_filter = {"defect_class": defect_class_filter}
+        norm_class = defect_class_filter.replace("-", "_").lower()
+        where_filter = {"defect_class": norm_class}
 
-    results = collection.query(
-        query_embeddings=query_embedding,
-        n_results=k,
-        where=where_filter,
-        include=["documents", "metadatas", "distances"]
-    )
+    try:
+        results = collection.query(
+            query_embeddings=query_embedding,
+            n_results=k,
+            where=where_filter,
+            include=["documents", "metadatas", "distances"]
+        )
+    except Exception as e:
+        # Fallback to un-filtered retrieval if specific class query fails
+        results = collection.query(
+            query_embeddings=query_embedding,
+            n_results=k,
+            include=["documents", "metadatas", "distances"]
+        )
 
     passages: List[Dict[str, Any]] = []
     if not results or not results["documents"] or len(results["documents"][0]) == 0:
@@ -77,14 +100,25 @@ def retrieve(
     distances = results["distances"][0]
 
     for doc, meta, dist in zip(docs, metas, distances):
-        # Convert cosine distance to cosine similarity score [0.0, 1.0]
-        # In Chroma cosine distance: dist = 1 - cosine_similarity
         sim_score = max(0.0, min(1.0, 1.0 - float(dist)))
+        
+        raw_source_ids = meta.get("source_ids", "")
+        if isinstance(raw_source_ids, str):
+            s_ids_list = [s.strip() for s in raw_source_ids.split(",") if s.strip()]
+        else:
+            s_ids_list = list(raw_source_ids)
+
+        clean_text = meta.get("raw_text") or doc
+
         passages.append({
             "id": meta.get("id", "UNKNOWN"),
             "defect_class": meta.get("defect_class", ""),
-            "text": doc,
-            "source": meta.get("source", "unspecified"),
+            "text": clean_text,
+            "source": meta.get("citations") or meta.get("source", "Technical Metallurgy Literature"),
+            "source_ids": s_ids_list,
+            "evidence_level": meta.get("evidence_level", "supported_inference"),
+            "relation_type": meta.get("relation_type", ""),
+            "diagnostic_use": meta.get("diagnostic_use", ""),
             "score": round(sim_score, 4)
         })
 
@@ -92,9 +126,10 @@ def retrieve(
 
 
 if __name__ == "__main__":
-    test_query = "Fine micro-cracks network on hot rolled steel strip with roll thermal fatigue"
+    test_query = "Linear gouge on steel surface from mechanical slide contact with side guide"
     print(f"Testing retrieval for: '{test_query}'")
     results = retrieve(test_query, k=2)
     for r in results:
-        print(f"[{r['id']}] (score: {r['score']:.4f}) Source: {r['source']}")
-        print(f"  {r['text']}\n")
+        print(f"[{r['id']}] (Sim: {r['score']:.4f} | Level: {r['evidence_level']}) Sources: {r['source_ids']}")
+        print(f"  {r['text']}")
+        print(f"  Ref: {r['source']}\n")

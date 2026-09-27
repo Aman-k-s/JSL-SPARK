@@ -1,9 +1,10 @@
 """
 Module: src/app.py
 Description: Enterprise industrial surface defect inspection and metallurgical root-cause platform.
-             Features automated YOLOv8 inference, morphological fingerprinting, ChromaDB vector RAG diagnosis,
-             deterministic operational decisioning, Grad-CAM explainability, and an interactive domain assistant.
-# OWNER: Aman
+             Features front-page specimen upload, automated YOLOv8 inference, morphological fingerprinting,
+             ChromaDB vector RAG diagnosis based on Tuhin's 48 curated metallurgical passages and 11 sources,
+             operational decisioning, Grad-CAM explainability, and an interactive domain assistant.
+# OWNER: Aman & Tuhin
 """
 
 import os
@@ -55,12 +56,19 @@ st.markdown("""
         text-transform: uppercase;
     }
     .header-subtitle {
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         color: #64748B;
         font-weight: 400;
         margin-bottom: 1.25rem;
         border-bottom: 1px solid #E2E8F0;
         padding-bottom: 0.75rem;
+    }
+    .upload-card {
+        background-color: #F8FAFC;
+        border: 1px solid #CBD5E1;
+        border-radius: 4px;
+        padding: 16px 20px;
+        margin-bottom: 18px;
     }
     .panel-card {
         background-color: #FFFFFF;
@@ -70,7 +78,7 @@ st.markdown("""
         margin-bottom: 14px;
     }
     .panel-card-title {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: #475569;
         text-transform: uppercase;
@@ -106,24 +114,14 @@ st.markdown("""
         color: #6B21A8;
         border: 1px solid #D8B4FE;
     }
-    .data-label {
-        font-size: 0.75rem;
-        color: #64748B;
-        text-transform: uppercase;
-        font-weight: 600;
-    }
-    .data-value {
-        font-size: 0.92rem;
-        color: #0F172A;
-        font-weight: 500;
-    }
-    .disclaimer-box {
-        font-size: 0.78rem;
-        color: #475569;
+    .investigation-box {
         background-color: #F8FAFC;
-        border-left: 3px solid #64748B;
-        padding: 6px 10px;
-        margin-bottom: 10px;
+        border-left: 3px solid #0284C7;
+        padding: 10px 14px;
+        margin-top: 10px;
+        font-size: 0.88rem;
+        color: #0F172A;
+        line-height: 1.5;
     }
     .citation-tag {
         font-family: Consolas, monospace;
@@ -133,6 +131,14 @@ st.markdown("""
         padding: 2px 6px;
         border: 1px solid #CBD5E1;
         border-radius: 3px;
+    }
+    .disclaimer-box {
+        font-size: 0.78rem;
+        color: #475569;
+        background-color: #F8FAFC;
+        border-left: 3px solid #64748B;
+        padding: 6px 10px;
+        margin-bottom: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -147,6 +153,7 @@ def draw_detections(image_np: np.ndarray, detections: list) -> np.ndarray:
         "inclusion": (234, 88, 12),     # Orange
         "patches": (202, 138, 4),       # Amber
         "pitted_surface": (13, 148, 136),# Teal
+        "rolled_in_scale": (37, 99, 235),# Blue
         "rolled-in_scale": (37, 99, 235),# Blue
         "scratches": (147, 51, 234)     # Purple
     }
@@ -168,7 +175,7 @@ def draw_detections(image_np: np.ndarray, detections: list) -> np.ndarray:
     return annotated
 
 
-# Sidebar
+# Sidebar: Parameters & Knowledge Base Metadata
 st.sidebar.markdown("### System Parameters")
 st.sidebar.caption("Hot Strip Mill Quality Control Node")
 
@@ -177,37 +184,23 @@ enable_gradcam = st.sidebar.checkbox("Compute Grad-CAM Activation Heatmap", valu
 anomaly_threshold = st.sidebar.slider("Out-of-Distribution Sensitivity", min_value=0.40, max_value=0.90, value=0.65, step=0.05)
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("### Input Source Selection")
-val_dir = PROJECT_ROOT / "data" / "NEU-DET-final" / "images" / "val"
-val_samples = []
-if val_dir.exists():
-    val_samples = [f.name for f in sorted(val_dir.glob("*.jpg"))[:40]]
+st.sidebar.markdown("### Knowledge Base Specification")
+st.sidebar.markdown("""
+- **KB Version**: `1.1 (Tuhin Curated)`
+- **Passages**: `48 Curated Records`
+- **Defect Classes**: `6 NEU Classes`
+- **Sourced Citations**: `11 Academic / Technical Sources`
+- **Diagnostic Policy**: Probable-origin hypotheses with recommended investigation actions
+""")
 
-input_mode = st.sidebar.radio("Select Input Mode:", ["Standard Test Set", "Manual Image Upload"])
-
-selected_image_path = None
-
-if input_mode == "Standard Test Set":
-    chosen_file = st.sidebar.selectbox("Test Sample Index:", val_samples, index=0 if val_samples else None)
-    if chosen_file:
-        selected_image_path = val_dir / chosen_file
-else:
-    uploaded_file = st.sidebar.file_uploader("Upload Surface Specimen (JPG / PNG):", type=["jpg", "jpeg", "png"])
-    if uploaded_file is not None:
-        temp_dir = PROJECT_ROOT / "scratch"
-        os.makedirs(temp_dir, exist_ok=True)
-        selected_image_path = temp_dir / uploaded_file.name
-        with open(selected_image_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-
-# Header
+# Main Header
 st.markdown('<div class="header-title">Hot-Rolled Steel Surface Quality & Root-Cause Platform</div>', unsafe_allow_html=True)
-st.markdown('<div class="header-subtitle">JSL Vision Diagnostics | Automated YOLOv8 Detection | Morphological Fingerprinting | Vector-Grounded Metallurgy</div>', unsafe_allow_html=True)
+st.markdown('<div class="header-subtitle">JSL Vision Diagnostics | Automated YOLOv8 Detection | Morphological Fingerprinting | Tuhin Curated RAG KB (48 Passages, 11 Sources)</div>', unsafe_allow_html=True)
 
 # Main Navigation Tabs
 tab_inspection, tab_assistant = st.tabs(["Automated Surface Inspection", "Metallurgical RAG Assistant"])
 
-# Session State for cross-tab context
+# Cross-tab context session state
 if "active_fingerprint" not in st.session_state:
     st.session_state.active_fingerprint = None
 if "active_diagnosis" not in st.session_state:
@@ -216,14 +209,58 @@ if "rag_chat_history" not in st.session_state:
     st.session_state.rag_chat_history = [
         {
             "role": "assistant",
-            "content": "Metallurgical retrieval assistant initialized. Enter a technical inquiry regarding defect mechanisms, descaling parameters, roll wear, or reference the active surface inspection."
+            "content": "Metallurgical retrieval assistant initialized with Tuhin's 48-passage knowledge base (11 technical sources). Submit an inquiry regarding defect mechanisms, roll wear, descaling headers, or reference the active surface inspection."
         }
     ]
 
 # TAB 1: Inspection View
 with tab_inspection:
+    # Front-and-Center Image Upload & Specimen Selection Card
+    st.markdown('<div class="upload-card">', unsafe_allow_html=True)
+    st.markdown('<div class="panel-card-title">Specimen Input & Image Upload</div>', unsafe_allow_html=True)
+    
+    val_dir = PROJECT_ROOT / "data" / "NEU-DET-final" / "images" / "val"
+    val_samples = []
+    if val_dir.exists():
+        val_samples = [f.name for f in sorted(val_dir.glob("*.jpg"))[:50]]
+
+    up_col1, up_col2 = st.columns([1, 1.4])
+    
+    with up_col1:
+        input_source_mode = st.radio(
+            "Input Selection Mode:",
+            ["Upload Specimen Image", "Select From Validation Gallery"],
+            horizontal=False
+        )
+
+    selected_image_path = None
+    with up_col2:
+        if input_source_mode == "Upload Specimen Image":
+            uploaded_file = st.file_uploader(
+                "Upload Steel Surface Specimen (JPG / JPEG / PNG):",
+                type=["jpg", "jpeg", "png"],
+                help="Drag and drop or browse for a high-resolution steel strip surface image."
+            )
+            if uploaded_file is not None:
+                temp_dir = PROJECT_ROOT / "scratch"
+                os.makedirs(temp_dir, exist_ok=True)
+                selected_image_path = temp_dir / uploaded_file.name
+                with open(selected_image_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+        else:
+            chosen_sample = st.selectbox(
+                "Select Specimen from Validation Set:",
+                val_samples,
+                index=0 if val_samples else None,
+                help="Pre-loaded hot-rolled steel validation specimens covering all 6 defect classes."
+            )
+            if chosen_sample:
+                selected_image_path = val_dir / chosen_sample
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
     if not selected_image_path or not selected_image_path.exists():
-        st.info("Select a surface specimen from the sidebar to initialize automated analysis.")
+        st.info("Upload an image above or select a specimen from the validation gallery to begin automated analysis.")
     else:
         img_bgr = cv2.imread(str(selected_image_path))
         if img_bgr is None:
@@ -233,7 +270,7 @@ with tab_inspection:
             h, w = img_rgb.shape[:2]
 
             # Execute pipeline
-            with st.spinner("Executing inference and vector retrieval..."):
+            with st.spinner("Executing inference and vector retrieval over 48 curated passages..."):
                 raw_detections = detect(str(selected_image_path), conf_threshold=conf_threshold)
                 pattern = detect_pattern(raw_detections)
                 fingerprints = []
@@ -245,7 +282,7 @@ with tab_inspection:
                 max_conf = max([d["confidence"] for d in raw_detections], default=0.0)
                 anomaly_result = evaluate_anomaly(str(selected_image_path), yolo_confidence=max_conf)
 
-            # Anomaly banner if triggered
+            # Anomaly alert banner if triggered
             if anomaly_result["is_anomaly"]:
                 st.markdown(f"""
                 <div style="background-color: #FAF5FF; border: 1px solid #D8B4FE; border-left: 4px solid #9333EA; padding: 12px 16px; margin-bottom: 16px;">
@@ -309,20 +346,30 @@ with tab_inspection:
                             "computed_severity_score": target_fp["severity_score"]
                         })
 
-                    # Grounded Diagnosis
-                    with st.spinner("Retrieving knowledge base evidence..."):
+                    # Grounded Diagnosis using Tuhin's KB
+                    with st.spinner("Querying curated metallurgical knowledge base..."):
                         diag_result = diagnose(target_fp, k=3)
                         st.session_state.active_diagnosis = diag_result
 
+                    # Display Tuhin's Diagnostic Output Contract
                     st.markdown(f"""
                     <div class="panel-card" style="margin-top: 10px;">
-                        <div class="panel-card-title">Metallurgical Root-Cause Assessment</div>
-                        <div style="font-size: 0.92rem; color: #1E293B; line-height: 1.55; margin-bottom: 10px;">
-                            {diag_result['probable_origin']}
+                        <div class="panel-card-title">Metallurgical Probable-Origin Hypothesis</div>
+                        <div style="font-size: 0.92rem; color: #1E293B; line-height: 1.55; margin-bottom: 8px;">
+                            {diag_result['probable_origin_hypothesis']}
                         </div>
-                        <div style="font-size: 0.82rem; color: #64748B;">
-                            Primary Cited Evidence: <span class="citation-tag">{diag_result['cited_passage_id']}</span> | 
-                            Vector Retrieval Similarity: <code>{diag_result['confidence']:.4f}</code>
+                        <div class="investigation-box">
+                            <b>Recommended Investigation Action:</b><br/>
+                            {diag_result['recommended_investigation']}
+                        </div>
+                        <div style="font-size: 0.8rem; color: #64748B; margin-top: 10px;">
+                            Cited KB Passage: <span class="citation-tag">{diag_result['cited_passage_id']}</span> | 
+                            Evidence Level: <code>{diag_result['evidence_level'].upper()}</code> | 
+                            Source IDs: <code>{diag_result['source_ids']}</code> | 
+                            Retrieval Similarity: <code>{diag_result['confidence']:.4f}</code>
+                        </div>
+                        <div style="font-size: 0.76rem; color: #94A3B8; margin-top: 4px;">
+                            References: {diag_result['source_citations']}
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -393,7 +440,7 @@ with tab_inspection:
 # TAB 2: Metallurgical RAG Assistant
 with tab_assistant:
     st.markdown('<div class="panel-card-title">Metallurgical Knowledge Base Retrieval Assistant</div>', unsafe_allow_html=True)
-    st.caption("Direct vector similarity retrieval and grounded synthesis over technical steel defect literature.")
+    st.caption("Grounded retrieval and diagnostic hypothesis generation over 48 curated metallurgical passages backed by 11 technical sources.")
 
     if st.session_state.active_fingerprint:
         active_cls = st.session_state.active_fingerprint.get("class").upper()
@@ -405,28 +452,28 @@ with tab_assistant:
     selected_prompt = None
 
     with p_col1:
-        if st.button("Rolled-in scale & descaling pressure", use_container_width=True):
-            selected_prompt = "What causes rolled-in scale and what descaling pressure is required?"
+        if st.button("Descaling & rolled-in scale", use_container_width=True):
+            selected_prompt = "What causes rolled-in scale, what descaling pressure is required, and what investigation is recommended?"
     with p_col2:
         if st.button("Side guide wear & scratches", use_container_width=True):
             selected_prompt = "How do we prevent scratches caused by side guide wear and alignment?"
     with p_col3:
-        if st.button("Residual copper & crazing", use_container_width=True):
+        if st.button("Copper tramp elements & crazing", use_container_width=True):
             selected_prompt = "Why do residual copper and tramp elements cause hot shortness and crazing?"
     with p_col4:
         if st.button("Contextual analysis of active specimen", use_container_width=True):
-            selected_prompt = "Explain the root causes of the defect currently detected in the inspection tab and recommend prevention steps."
+            selected_prompt = "Explain the probable root causes of the defect currently detected in the inspection tab and recommend plant investigation actions."
 
     # Chat Transcript Display
     for msg in st.session_state.rag_chat_history:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
             if "citations" in msg and msg["citations"]:
-                with st.expander("Retrieved Evidence Passages", expanded=False):
+                with st.expander("Retrieved Evidence Passages & Sources", expanded=False):
                     for p in msg["citations"]:
                         st.markdown(f"**Passage [{p['id']}]** | Class: `{p['defect_class']}` | Similarity Score: `{p['score']:.3f}`")
                         st.markdown(f"> {p['text']}")
-                        st.caption(f"Source Reference: {p['source']}")
+                        st.caption(f"Source IDs: {p.get('source_ids')} | Evidence Level: {p.get('evidence_level')} | References: {p.get('source')}")
 
     # User Input
     user_query = st.chat_input("Enter metallurgical or rolling process inquiry...")
@@ -447,11 +494,11 @@ with tab_assistant:
                 )
                 st.markdown(rag_res["answer"])
                 if rag_res["cited_passages"]:
-                    with st.expander("Retrieved Evidence Passages", expanded=False):
+                    with st.expander("Retrieved Evidence Passages & Sources", expanded=False):
                         for p in rag_res["cited_passages"]:
                             st.markdown(f"**Passage [{p['id']}]** | Class: `{p['defect_class']}` | Similarity Score: `{p['score']:.3f}`")
                             st.markdown(f"> {p['text']}")
-                            st.caption(f"Source Reference: {p['source']}")
+                            st.caption(f"Source IDs: {p.get('source_ids')} | Evidence Level: {p.get('evidence_level')} | References: {p.get('source')}")
 
         st.session_state.rag_chat_history.append({
             "role": "assistant",

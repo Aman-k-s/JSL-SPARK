@@ -113,13 +113,15 @@ def answer_question(
             "query": user_query
         }
 
-    # Format passages for context
+    # Format passages for context including evidence levels and source IDs
     context_blocks = []
     for p in retrieved:
         context_blocks.append(
             f"[{p['id']}] (Defect Class: {p['defect_class']} | Similarity: {p['score']:.3f})\n"
-            f"Source: {p['source']}\n"
-            f"Content: {p['text']}"
+            f"Evidence Level: {p.get('evidence_level', 'supported_inference')} | Source IDs: {p.get('source_ids', [])}\n"
+            f"Technical References: {p.get('source', '')}\n"
+            f"Mechanism Content: {p['text']}\n"
+            f"Diagnostic & Investigation Guidance: {p.get('diagnostic_use', '')}"
         )
     context_str = "\n\n".join(context_blocks)
 
@@ -127,25 +129,31 @@ def answer_question(
     inspection_ctx = ""
     if current_fingerprint:
         inspection_ctx = (
-            f"\nCURRENT INSPECTION CONTEXT:\n"
+            f"\nCURRENT SPECIMEN INSPECTION CONTEXT:\n"
             f"- Classified Defect: {current_fingerprint.get('class')}\n"
             f"- Confidence: {current_fingerprint.get('confidence')}\n"
             f"- Morphology: {current_fingerprint.get('morphology')} (aspect ratio: {current_fingerprint.get('aspect_ratio')})\n"
             f"- Strip Location: {current_fingerprint.get('location')}\n"
             f"- Affected Area: {current_fingerprint.get('affected_area_pct')}%\n"
-            f"- Severity: {current_fingerprint.get('severity')}\n"
+            f"- Severity Level: {current_fingerprint.get('severity')}\n"
         )
         if current_diagnosis:
-            inspection_ctx += f"- Previous Grounded Diagnosis: {current_diagnosis.get('probable_origin')} (Cited: {current_diagnosis.get('cited_passage_id')})\n"
+            inspection_ctx += (
+                f"- Grounded Probable Origin: {current_diagnosis.get('probable_origin_hypothesis') or current_diagnosis.get('probable_origin')}\n"
+                f"- Recommended Investigation: {current_diagnosis.get('recommended_investigation')}\n"
+                f"- Cited Passage: [{current_diagnosis.get('cited_passage_id')}] Sources: {current_diagnosis.get('source_ids')}\n"
+            )
 
     system_prompt = (
         "You are an expert metallurgical quality assistant for hot-rolled steel manufacturing.\n"
-        "STRICT GUIDELINES:\n"
+        "STRICT GUIDELINES & DIAGNOSTIC POLICY:\n"
         "1. Answer the user's question clearly, professionally, and helpfully.\n"
         "2. Base your answer STRICTLY on the facts and mechanisms in the provided metallurgical passages.\n"
-        "3. Explicitly cite the passage IDs (e.g. [CRZ-001], [RIS-002], [SCR-003]) in your response whenever mentioning a claim or cause.\n"
-        "4. If the provided passages do not contain enough information to address a specific aspect of the question, state that clearly rather than inventing facts.\n"
-        "5. If current inspection context is provided and relevant, reference it directly."
+        "3. Frame causes as PROBABLE-ORIGIN HYPOTHESES (using 'consistent with', 'probable origin', 'requires validation') rather than claiming absolute root cause from visual appearance alone.\n"
+        "4. Include concrete RECOMMENDED INVESTIGATION actions (e.g. roll wear audits, descaling header inspections, chemistry logs).\n"
+        "5. Explicitly cite passage IDs (e.g. [SCR-01], [RIS-05]) and technical source IDs (e.g. [S2, S7]) in your response.\n"
+        "6. If the provided passages do not contain enough information to address a specific aspect of the question, state that clearly rather than inventing facts.\n"
+        "7. If current inspection context is provided and relevant, reference it directly."
     )
 
     user_prompt = (

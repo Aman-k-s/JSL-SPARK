@@ -1,0 +1,958 @@
+{
+  "kb_version": "1.1",
+  "purpose": "Diagnostic knowledge base for the Metallurgy RAG layer of the steel-surface-defect inspection system. It links visual defect fingerprints to probable mechanisms and engineering investigation actions. The KB is intended to generate a probable-origin hypothesis for validation, not to declare a definitive root cause from an image alone.",
+  "sourcing_note": "Passages are curated from the listed peer-reviewed papers, official technical guidance, a Northeastern University dataset source, and standards terminology. Each passage carries source_ids. Some entries are engineering inferences that combine multiple observed features with documented mechanisms; these are marked as supported_inference rather than directly_supported. RAG outputs must preserve this uncertainty and cite the retrieved passage/source.",
+  "relation_types": [
+    "defect_mechanism",
+    "morphology_mechanism",
+    "pattern_mechanism",
+    "location_mechanism",
+    "process_to_defect",
+    "upstream_to_defect",
+    "equipment_to_defect",
+    "investigation_action",
+    "evidence_combination"
+  ],
+  "defect_classes": [
+    {
+      "name": "scratches",
+      "dataset_label": "Sc",
+      "note": "Visual class in NEU; mechanisms may include mechanical contact, roll/guide interaction, debris, or stainless rolling/emulsion-related thermal scratch phenomena.",
+      "source_ids": [
+        "S1",
+        "S6"
+      ]
+    },
+    {
+      "name": "crazing",
+      "dataset_label": "Cr",
+      "note": "Visual crack-network class in NEU; thermal-fatigue/heat-checking is a possible mechanism, but casting or other crack origins require process evidence.",
+      "source_ids": [
+        "S1",
+        "S4",
+        "S9"
+      ]
+    },
+    {
+      "name": "inclusion",
+      "dataset_label": "In",
+      "note": "Visual class associated with non-metallic inclusions; steelmaking/casting genealogy is important for diagnosis.",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "patches",
+      "dataset_label": "Pa",
+      "note": "Visual appearance class with multiple possible process/appearance mechanisms; identify the stage where it first appears before assigning cause.",
+      "source_ids": [
+        "S1",
+        "S9",
+        "S10",
+        "S11"
+      ]
+    },
+    {
+      "name": "pitted_surface",
+      "dataset_label": "PS",
+      "note": "Visual pit-like class; distinguish mechanical, inclusion-related and chemical/corrosion mechanisms using pattern and process evidence.",
+      "source_ids": [
+        "S1",
+        "S5",
+        "S7",
+        "S8",
+        "S10"
+      ]
+    },
+    {
+      "name": "rolled_in_scale",
+      "dataset_label": "RS",
+      "note": "Oxide-scale-related class; high-temperature oxidation, descaling and subsequent rolling are central diagnostic stages.",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S7"
+      ]
+    }
+  ],
+  "passages": [
+    {
+      "id": "SCR-01",
+      "defect_class": "scratches",
+      "relation_type": "defect_mechanism",
+      "trigger_keywords": [
+        "scratch"
+      ],
+      "text": "A scratch is fundamentally a mechanical-interaction defect: a linear surface disruption caused by sliding contact between the strip and a harder surface (a roll, guide, or trapped debris) under sufficient normal force to displace or gouge metal.",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone.",
+      "source_ids": [
+        "S6",
+        "S10"
+      ],
+      "evidence_level": "supported_inference"
+    },
+    {
+      "id": "SCR-02",
+      "defect_class": "scratches",
+      "relation_type": "morphology_mechanism",
+      "trigger_keywords": [
+        "elongated",
+        "directional"
+      ],
+      "text": "An elongated, directional scratch is consistent with sustained sliding or dragging contact along the direction of strip travel. A single-point impact would be expected to produce a more localized dent or gouge rather than a continuous directional mark.",
+      "source_ids": [
+        "S6",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "SCR-03",
+      "defect_class": "scratches",
+      "relation_type": "pattern_mechanism",
+      "trigger_keywords": [
+        "repetitive",
+        "periodic"
+      ],
+      "text": "A scratch pattern repeating at a regular interval along the strip length can indicate a recurring fixed-position contact source, such as a roll or guide. Compare the measured repeat interval with roll geometry and equipment kinematics to test the suspected source; the interval should not be treated as proof by itself.",
+      "source_ids": [
+        "S6",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "SCR-04",
+      "defect_class": "scratches",
+      "relation_type": "location_mechanism",
+      "trigger_keywords": [
+        "edge"
+      ],
+      "text": "Scratches concentrated at or near the strip edge can point toward edge-handling equipment such as guides or edge rolls. Edge location is a prioritization signal, not a definitive identification of the contact source.",
+      "source_ids": [
+        "S6",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "SCR-05",
+      "defect_class": "scratches",
+      "relation_type": "process_to_defect",
+      "trigger_keywords": [
+        "roll-gap",
+        "misalignment"
+      ],
+      "text": "Roll misalignment, roll-gap/control problems or unintended strip-equipment contact can contribute to scratches. The exact mechanism should be checked against line alignment and contact history.",
+      "source_ids": [
+        "S6"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "SCR-06",
+      "defect_class": "scratches",
+      "relation_type": "upstream_to_defect",
+      "trigger_keywords": [
+        "stainless",
+        "galling",
+        "sticking"
+      ],
+      "text": "For stainless steel, roll-surface condition, rolling parameters and lubrication/emulsion conditions can contribute to scratch-like or thermal-scratch defects. Sticking or material transfer on a work roll is therefore a plausible equipment/tribology hypothesis that should be validated from roll inspection and process history.",
+      "source_ids": [
+        "S6"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "SCR-07",
+      "defect_class": "scratches",
+      "relation_type": "investigation_action",
+      "trigger_keywords": [
+        "scratch"
+      ],
+      "text": "When a scratch is flagged: (1) inspect corresponding work-roll and guide surfaces for damage, embedded debris or material transfer; (2) compare any repeat interval with roll geometry and line kinematics; (3) check preceding/following coils processed through the same equipment; (4) review rolling/emulsion conditions when a thermal-scratch mechanism is plausible.",
+      "source_ids": [
+        "S6"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "SCR-08",
+      "defect_class": "scratches",
+      "relation_type": "evidence_combination",
+      "trigger_keywords": [
+        "repetitive",
+        "edge"
+      ],
+      "text": "A repetitive pattern combined with an edge-concentrated location strengthens the hypothesis of a fixed, edge-adjacent equipment contact source. Confirm it with equipment geometry, repeat interval and inspection history.",
+      "source_ids": [
+        "S6"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-01",
+      "defect_class": "crazing",
+      "relation_type": "defect_mechanism",
+      "trigger_keywords": [
+        "crazing"
+      ],
+      "text": "Crazing-like surface cracking can be associated with thermal-fatigue or thermal-gradient effects. In rolling systems, heat-checking of roll surfaces is one possible source, but the visual NEU class does not uniquely establish the physical mechanism.",
+      "source_ids": [
+        "S1",
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-02",
+      "defect_class": "crazing",
+      "relation_type": "morphology_mechanism",
+      "trigger_keywords": [
+        "fine",
+        "shallow",
+        "interconnected"
+      ],
+      "text": "A fine, shallow, interconnected crack network is consistent with a distributed thermal-fatigue or heat-checking mechanism. This morphology should be checked against roll condition and process history rather than treated as diagnostic by itself.",
+      "source_ids": [
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-03",
+      "defect_class": "crazing",
+      "relation_type": "pattern_mechanism",
+      "trigger_keywords": [
+        "repetitive",
+        "periodic"
+      ],
+      "text": "Crazing that repeats at a regular interval may indicate transfer from a recurring roll-surface condition such as heat-checking. Compare periodicity with roll geometry and inspect the roll surface before assigning the origin.",
+      "source_ids": [
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-04",
+      "defect_class": "crazing",
+      "relation_type": "location_mechanism",
+      "trigger_keywords": [
+        "edge"
+      ],
+      "text": "Crazing concentrated near strip edges can be consistent with stronger local thermal gradients, but edge location alone is not sufficient to establish a thermal origin.",
+      "source_ids": [
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-05",
+      "defect_class": "crazing",
+      "relation_type": "process_to_defect",
+      "trigger_keywords": [
+        "reheating",
+        "roll-gap"
+      ],
+      "text": "Uneven heating/cooling or abrupt process changes can create thermal gradients that may contribute to crack-like surface defects. Validate the hypothesis against furnace, cooling and rolling records.",
+      "source_ids": [
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-06",
+      "defect_class": "crazing",
+      "relation_type": "upstream_to_defect",
+      "trigger_keywords": [
+        "deep",
+        "localized",
+        "casting"
+      ],
+      "text": "Where a crack-like defect is deep, localized or strongly correlated with a particular heat/cast, upstream casting records should be reviewed. Continuous-casting literature documents cracking as an upstream surface-defect mechanism, but an image alone cannot establish that a given crazing-like mark originated in casting.",
+      "source_ids": [
+        "S4"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-07",
+      "defect_class": "crazing",
+      "relation_type": "investigation_action",
+      "trigger_keywords": [
+        "crazing"
+      ],
+      "text": "When crazing is flagged: (1) inspect the work-roll surface for heat-checking when periodicity is present; (2) review reheating/cooling records; (3) if the defect is deep, localized or heat/cast-correlated, trace slab and casting records.",
+      "source_ids": [
+        "S4",
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "CRZ-08",
+      "defect_class": "crazing",
+      "relation_type": "evidence_combination",
+      "trigger_keywords": [
+        "periodic",
+        "fine",
+        "heat-correlated"
+      ],
+      "text": "Periodic repetition plus fine crack morphology supports investigating roll heat-checking first; a non-periodic, deep, localized defect with heat/cast correlation supports investigating upstream casting. These are ranked investigation hypotheses, not proof of root cause.",
+      "source_ids": [
+        "S4",
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-01",
+      "defect_class": "inclusion",
+      "relation_type": "defect_mechanism",
+      "trigger_keywords": [
+        "inclusion"
+      ],
+      "text": "An inclusion defect is associated with a non-metallic particle such as an oxide, sulfide, slag or refractory-related particle that entered the steel during steelmaking/casting and later became exposed or brought near the surface by deformation.",
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_level": "directly_supported",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-02",
+      "defect_class": "inclusion",
+      "relation_type": "morphology_mechanism",
+      "trigger_keywords": [
+        "streak",
+        "elongated"
+      ],
+      "text": "A streak-like inclusion aligned with the rolling direction is consistent with an inclusion that has been elongated by rolling deformation. Confirm with metallographic or chemical examination when root-cause attribution is required.",
+      "source_ids": [
+        "S3"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-03",
+      "defect_class": "inclusion",
+      "relation_type": "pattern_mechanism",
+      "trigger_keywords": [
+        "repetitive",
+        "cross-web"
+      ],
+      "text": "Inclusion defects recurring at the same cross-web position across multiple coils from the same heat can indicate a persistent localized source in steelmaking/casting, such as refractory or flow-control contamination. Cross-web recurrence is an investigation signal rather than proof of a specific component.",
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-04",
+      "defect_class": "inclusion",
+      "relation_type": "location_mechanism",
+      "trigger_keywords": [
+        "center"
+      ],
+      "text": "Inclusion location across the strip width can help prioritize casting/flow investigations, but location alone is not diagnostic. Review tundish/ladle flow, casting records and heat genealogy alongside the image pattern.",
+      "source_ids": [
+        "S4"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-05",
+      "defect_class": "inclusion",
+      "relation_type": "process_to_defect",
+      "trigger_keywords": [
+        "deoxidation",
+        "ladle"
+      ],
+      "text": "Steelmaking and casting conditions influence non-metallic inclusion formation and removal. Documented sources include deoxidation products and entrapped mold powder; inadequate inclusion control can therefore contribute to downstream inclusion-related surface defects.",
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_level": "directly_supported",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-06",
+      "defect_class": "inclusion",
+      "relation_type": "upstream_to_defect",
+      "trigger_keywords": [
+        "inclusion",
+        "casting",
+        "heat"
+      ],
+      "text": "Because inclusions can originate in steelmaking/casting, an inclusion flag should trigger heat/cast/slab genealogy review rather than assuming the rolling mill created the particle.",
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_level": "directly_supported",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-07",
+      "defect_class": "inclusion",
+      "relation_type": "investigation_action",
+      "trigger_keywords": [
+        "inclusion"
+      ],
+      "text": "When an inclusion is flagged: (1) trace the coil to heat/cast and slab ID; (2) review steelmaking/casting records for inclusion-control conditions; (3) check whether similar defects recur at the same width position or across coils from the same heat; (4) use SEM/EDS or equivalent plant analysis when available.",
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "INC-08",
+      "defect_class": "inclusion",
+      "relation_type": "evidence_combination",
+      "trigger_keywords": [
+        "streak",
+        "heat-correlated"
+      ],
+      "text": "Rolling-direction streak morphology plus recurrence linked to the same heat supports a steelmaking/casting-origin hypothesis. Confirm through heat genealogy and, where possible, inclusion chemistry or metallography.",
+      "source_ids": [
+        "S3",
+        "S4"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-01",
+      "defect_class": "patches",
+      "relation_type": "defect_mechanism",
+      "trigger_keywords": [
+        "patch"
+      ],
+      "text": "A patch is a visually distinct area of surface appearance. In steel-strip literature, patch-like defects can be associated with oxide/contamination, incomplete cleaning or pickling/annealing-related surface conditions. The visual class is not a unique physical mechanism.",
+      "source_ids": [
+        "S9",
+        "S10",
+        "S11"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-02",
+      "defect_class": "patches",
+      "relation_type": "morphology_mechanism",
+      "trigger_keywords": [
+        "diffuse",
+        "sharp-edge"
+      ],
+      "text": "A diffuse-edged patch may be consistent with a chemical, oxide or surface-appearance variation, while a sharp boundary may be consistent with localized transfer or contact. Edge sharpness should be used as a hypothesis cue, not as a definitive mechanism classifier.",
+      "source_ids": [
+        "S9",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-03",
+      "defect_class": "patches",
+      "relation_type": "pattern_mechanism",
+      "trigger_keywords": [
+        "repetitive",
+        "fixed-position"
+      ],
+      "text": "A patch recurring at the same strip-width position across multiple coils can implicate a fixed process or equipment source. Check spray/nozzle, guide, roll and other width-dependent conditions before attributing the defect to chemistry.",
+      "source_ids": [
+        "S9",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-04",
+      "defect_class": "patches",
+      "relation_type": "location_mechanism",
+      "trigger_keywords": [
+        "edge"
+      ],
+      "text": "Patches concentrated near the coil edges can indicate an edge-specific processing or surface-condition difference. Review edge coverage, masking, cooling, trimming and handling conditions.",
+      "source_ids": [
+        "S9",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-05",
+      "defect_class": "patches",
+      "relation_type": "process_to_defect",
+      "trigger_keywords": [
+        "pickling",
+        "descaling-spray"
+      ],
+      "text": "Non-uniform cleaning or pickling can leave localized surface-appearance differences or residual oxide. Pickling itself must be controlled because it removes oxide and also dissolves the stainless surface; inspect coverage, chemistry and residence conditions when a patch appears after pickling.",
+      "source_ids": [
+        "S7",
+        "S11"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-06",
+      "defect_class": "patches",
+      "relation_type": "upstream_to_defect",
+      "trigger_keywords": [
+        "annealing",
+        "furnace-atmosphere"
+      ],
+      "text": "Patches that first appear or change after annealing should trigger review of annealing atmosphere, temperature/time history and surface contamination. The image alone cannot distinguish an atmosphere effect from other process causes.",
+      "source_ids": [
+        "S9",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-07",
+      "defect_class": "patches",
+      "relation_type": "investigation_action",
+      "trigger_keywords": [
+        "patch"
+      ],
+      "text": "When a patch is flagged: (1) identify the process stage where it first appears; (2) review pickling/cleaning conditions if relevant; (3) review annealing records if it appears after annealing; (4) check fixed width-position recurrence across coils; (5) inspect equipment surfaces where transfer is plausible.",
+      "source_ids": [
+        "S7",
+        "S9",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PAT-08",
+      "defect_class": "patches",
+      "relation_type": "evidence_combination",
+      "trigger_keywords": [
+        "diffuse",
+        "fixed-position"
+      ],
+      "text": "A diffuse-edged patch recurring at a fixed strip-width position supports investigating a fixed process/equipment source. Do not name a specific component, such as a pickling nozzle, unless line evidence supports it.",
+      "source_ids": [
+        "S7",
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-01",
+      "defect_class": "pitted_surface",
+      "relation_type": "defect_mechanism",
+      "trigger_keywords": [
+        "pitted",
+        "pitting"
+      ],
+      "text": "Pitting is a localized surface-removal or indentation appearance. Possible mechanisms include localized corrosion/chemical attack, mechanical indentation or defects associated with inclusions/rolled-in material; the visual class alone does not distinguish them.",
+      "source_ids": [
+        "S5",
+        "S7",
+        "S8",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-02",
+      "defect_class": "pitted_surface",
+      "relation_type": "morphology_mechanism",
+      "trigger_keywords": [
+        "uniform",
+        "fine",
+        "coarse"
+      ],
+      "text": "Fine, widespread pitting can be consistent with a chemical/pickling mechanism, while coarse or irregular pits can be consistent with mechanical indentation or inclusion-related effects. These are competing hypotheses that require process correlation or examination for confirmation.",
+      "source_ids": [
+        "S5",
+        "S7",
+        "S8",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-03",
+      "defect_class": "pitted_surface",
+      "relation_type": "pattern_mechanism",
+      "trigger_keywords": [
+        "periodic"
+      ],
+      "text": "Pitting with regular periodic spacing along the rolling direction can implicate a recurring mechanical source such as a worn or contaminated roll surface. Compare the period with roll geometry and inspect the roll before assigning the cause.",
+      "source_ids": [
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-04",
+      "defect_class": "pitted_surface",
+      "relation_type": "location_mechanism",
+      "trigger_keywords": [
+        "edge"
+      ],
+      "text": "A strong width-wise gradient in pitting can indicate a non-uniform process or environmental condition. For stainless steel, chemical exposure and local surface condition can influence localized corrosion, so bath/coverage records should be reviewed alongside width position.",
+      "source_ids": [
+        "S7",
+        "S8"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-05",
+      "defect_class": "pitted_surface",
+      "relation_type": "process_to_defect",
+      "trigger_keywords": [
+        "pickling",
+        "dwell-time"
+      ],
+      "text": "Excessive or poorly controlled pickling can cause surface attack and pitting-type defects; prolonged exposure is one possible mechanism. Validate against bath concentration, temperature, residence time and inhibitors before attributing the defect to pickling.",
+      "source_ids": [
+        "S7",
+        "S11"
+      ],
+      "evidence_level": "directly_supported",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-06",
+      "defect_class": "pitted_surface",
+      "relation_type": "upstream_to_defect",
+      "trigger_keywords": [
+        "inclusion-site"
+      ],
+      "text": "Where pitting clusters around inclusion sites, investigate an inclusion-related upstream mechanism as well as the downstream chemical/pickling stage. Published work shows that inclusion characteristics can contribute to pit-shaped rolled-product defects, and pickling can reveal or intensify pre-existing surface irregularities.",
+      "source_ids": [
+        "S3",
+        "S5",
+        "S7"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-07",
+      "defect_class": "pitted_surface",
+      "relation_type": "investigation_action",
+      "trigger_keywords": [
+        "pitted",
+        "pitting"
+      ],
+      "text": "When pitting is flagged: (1) review pickling-bath concentration, temperature, residence time and relevant chemistry; (2) if periodic, inspect roll condition and compare spacing with roll geometry; (3) if clustered around inclusions, trace heat/cast records and consider metallographic/chemical confirmation.",
+      "source_ids": [
+        "S5",
+        "S7",
+        "S8"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "PIT-08",
+      "defect_class": "pitted_surface",
+      "relation_type": "evidence_combination",
+      "trigger_keywords": [
+        "uniform",
+        "batch-correlated"
+      ],
+      "text": "A specific pickling-batch correlation supports a chemical-process investigation; periodicity without a corresponding bath correlation supports a mechanical investigation. Inclusion correlation should remain an additional hypothesis where morphology indicates it.",
+      "source_ids": [
+        "S5",
+        "S7",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-01",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "defect_mechanism",
+      "trigger_keywords": [
+        "rolled-in scale"
+      ],
+      "text": "Rolled-in scale occurs when oxide scale formed during high-temperature processing is not adequately removed before rolling and is subsequently pressed into the strip surface.",
+      "source_ids": [
+        "S2"
+      ],
+      "evidence_level": "directly_supported",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-02",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "morphology_mechanism",
+      "trigger_keywords": [
+        "thick",
+        "irregular",
+        "thin",
+        "uniform"
+      ],
+      "text": "The appearance of rolled-in scale varies with the amount and structure of retained oxide. Use morphology as a clue to the extent/distribution of retained scale, but do not infer reheating-soak duration from appearance alone.",
+      "source_ids": [
+        "S2"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-03",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "pattern_mechanism",
+      "trigger_keywords": [
+        "periodic"
+      ],
+      "text": "A rolled-in-scale pattern repeating at a fixed interval may indicate recurring transfer from a roll surface. Compare periodicity with roll geometry and inspect the roll before assigning this mechanism.",
+      "source_ids": [
+        "S2",
+        "S10"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-04",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "location_mechanism",
+      "trigger_keywords": [
+        "edge"
+      ],
+      "text": "Rolled-in scale concentrated near strip edges can be consistent with non-uniform descaling or edge-specific thermal conditions. Review descaling-header coverage, nozzle condition and edge temperature/cooling history.",
+      "source_ids": [
+        "S2",
+        "S9"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-05",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "process_to_defect",
+      "trigger_keywords": [
+        "descaling",
+        "water-pressure"
+      ],
+      "text": "Insufficient hydraulic descaling can allow adherent oxide to remain and be rolled into the strip surface. Scale reformation between descaling and rolling is another process hypothesis that should be checked against line timing and temperature history.",
+      "source_ids": [
+        "S2"
+      ],
+      "evidence_level": "directly_supported",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-06",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "upstream_to_defect",
+      "trigger_keywords": [
+        "reheating",
+        "soak-time"
+      ],
+      "text": "A longer or hotter reheating history can increase oxide formation before descaling, so furnace history should be reviewed when rolled-in scale is observed. The exact relationship must be established from the plant's grade, furnace and descaling conditions.",
+      "source_ids": [
+        "S2"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-07",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "investigation_action",
+      "trigger_keywords": [
+        "rolled-in scale"
+      ],
+      "text": "When rolled-in scale is flagged: (1) review descaling-header pressure, flow and nozzle condition; (2) review reheating temperature/time history; (3) inspect scale morphology; (4) compare the defect before/after pickling when such data exist, because pickling is intended to remove oxide-scale-related surface material but embedded defects may persist.",
+      "source_ids": [
+        "S2",
+        "S7"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    },
+    {
+      "id": "RIS-08",
+      "defect_class": "rolled_in_scale",
+      "relation_type": "evidence_combination",
+      "trigger_keywords": [
+        "persists-after-pickling",
+        "water-pressure"
+      ],
+      "text": "Rolled-in scale together with evidence of inadequate descaling strongly supports a descaling investigation. Persistence after pickling can provide additional evidence that the defect was mechanically embedded or otherwise not simply loose surface oxide, but it is not by itself proof of one root cause.",
+      "source_ids": [
+        "S2",
+        "S7"
+      ],
+      "evidence_level": "supported_inference",
+      "diagnostic_use": "Generate a probable-origin hypothesis and an investigation action; do not assert root cause from image alone."
+    }
+  ],
+  "title": "Steel Surface Metallurgy Diagnostic Knowledge Base",
+  "diagnostic_policy": {
+    "core_rule": "The RAG must output a probable-origin hypothesis, not a definitive root-cause claim, unless independent plant evidence establishes causality.",
+    "single_image_limit": "Visual evidence can identify class, morphology, location and pattern, but exact process origin may require heat/coil genealogy, process logs, equipment history or metallographic/chemical validation.",
+    "multi_hypothesis_rule": "If two or more mechanisms fit the fingerprint, return the leading hypotheses and the observations or plant data needed to distinguish them.",
+    "source_rule": "Every diagnosis must cite the retrieved KB passage and its source_ids.",
+    "plant_validation_rule": "JSL-specific thresholds, equipment geometry, chemistry limits and disposition rules must be validated against JSL process data before operational deployment."
+  },
+  "sources": {
+    "S1": {
+      "title": "NEU surface defect database",
+      "authors": "Kechen Song; Yunhui Yan",
+      "publisher_or_venue": "Northeastern University",
+      "year": 2013,
+      "type": "dataset_source",
+      "url": "https://faculty.neu.edu.cn/songkc/en/zdylm/263270/list/index.htm",
+      "supports": "Dataset identity, six NEU hot-rolled steel surface-defect classes, 1,800 grayscale images, 300 per class, 200×200 resolution, and NEU-DET bounding-box annotations."
+    },
+    "S2": {
+      "title": "Characterization of hot rolled scales-root cause identification and remedial action",
+      "authors": "Arthita Dey; Tanmay Bhattacharyya; Sharmistha Dhara",
+      "publisher_or_venue": "Engineering Failure Analysis, 34, 478-487",
+      "year": 2013,
+      "doi": "10.1016/j.engfailanal.2013.07.018",
+      "url": "https://doi.org/10.1016/j.engfailanal.2013.07.018",
+      "supports": "High-temperature oxide-scale formation, hydraulic descaling, rolled-in scale when scale is not removed and is subsequently rolled into the surface, and the role of scale microstructure/pickling in removal."
+    },
+    "S3": {
+      "title": "Characteristics and Evolution of Inclusion Induced Surface Defects of Cold Rolled IF Sheet",
+      "authors": "Hui-xiang Yu; Chenxi Ji; Bin Chen; Chang Wang et al.",
+      "publisher_or_venue": "Journal of Iron and Steel Research International, 22(Suppl. 1), 17-23",
+      "year": 2015,
+      "doi": "10.1016/S1006-706X(15)30132-1",
+      "url": "https://doi.org/10.1016/S1006-706X(15)30132-1",
+      "supports": "Steelmaking/casting-origin non-metallic inclusions, deoxidation products and entrapped mold powder, and how inclusion position/size/property can evolve into pockmark, peeling, dent, scratch or sliver defects after rolling."
+    },
+    "S4": {
+      "title": "A Review on Causes of Surface Defects in Continuous Casting",
+      "authors": "Ferdinando R. Camisani-Calzolari; Ian K. Craig; P. Christiaan Pistorius",
+      "publisher_or_venue": "IFAC Proceedings Volumes, 36(24), 113-121",
+      "year": 2003,
+      "doi": "10.1016/S1474-6670(17)37613-9",
+      "url": "https://doi.org/10.1016/S1474-6670(17)37613-9",
+      "supports": "Continuous-casting defect mechanisms including cracking, inclusions, sticking, bleeding, oscillation marks, stopmarks and depressions."
+    },
+    "S5": {
+      "title": "Formation mechanism and control of a kind of pit-shaped defect in Cf53 rolled products",
+      "authors": "Kaimin Wang; Haiyan Tang; Huajun Wang; Xingyu Jia; Jiaquan Zhang",
+      "publisher_or_venue": "Chemical Engineering Journal, 495, 153273",
+      "year": 2024,
+      "doi": "10.1016/j.cej.2024.153273",
+      "url": "https://doi.org/10.1016/j.cej.2024.153273",
+      "supports": "A documented pit-shaped defect mechanism involving large composite CaS inclusions, SEN clogging and trapped inclusions, with relationships to sulfur/calcium/oxygen content and steel temperature in the studied Cf53 process."
+    },
+    "S6": {
+      "title": "Thermal Scratch on Surface of SUS430 Stainless Steel Strip in Cold Rolling Process",
+      "authors": "Chang-sheng Li; Jin-Shan Chen; Wen-long Han; You-yuan Li",
+      "publisher_or_venue": "Journal of Iron and Steel Research International, 21(3), 282-286",
+      "year": 2014,
+      "doi": "10.1016/S1006-706X(14)60043-1",
+      "url": "https://doi.org/10.1016/S1006-706X(14)60043-1",
+      "supports": "For SUS430 cold rolling, thermal-scratch severity is related to rolling parameters, roll-surface condition and emulsion conditions; increasing roll roughness aggravated the studied thermal scratch."
+    },
+    "S7": {
+      "title": "Post-fabrication treatment",
+      "authors": "Outokumpu",
+      "publisher_or_venue": "Outokumpu technical guidance",
+      "year": "current",
+      "type": "technical_webpage",
+      "url": "https://www.outokumpu.com/en/expertise/stainless-basics/post-fabrication-treatment",
+      "supports": "Stainless-steel pickling removes oxide scale and the chromium-depleted layer; pickling is controlled because it dissolves the stainless surface; chloride-containing agents should be avoided because of pitting risk; annealing can create oxide scale requiring descaling/pickling."
+    },
+    "S8": {
+      "title": "What makes stainless steel corrosion resistant?",
+      "authors": "Outokumpu",
+      "publisher_or_venue": "Outokumpu technical guidance",
+      "year": "current",
+      "type": "technical_webpage",
+      "url": "https://www.outokumpu.com/en/expertise/stainless-basics/corrosion-resistance",
+      "supports": "Localized pitting corrosion, passive-film breakdown, and the effects of chlorides, temperature, pH and oxidizing environments on pitting susceptibility."
+    },
+    "S9": {
+      "title": "Deep Learning-Based Steel Surface Defect Detection: A Survey",
+      "authors": "Survey article",
+      "publisher_or_venue": "Coatings, 2026",
+      "year": 2026,
+      "type": "review_article",
+      "url": "https://www.mdpi.com/2079-6412/16/9/1040",
+      "supports": "Recent review-level descriptions of steel surface-defect morphology and candidate mechanisms, including crazing/thermal effects, patch appearance and pitted-surface mechanisms. Use as supporting context rather than sole proof of plant-specific root cause."
+    },
+    "S10": {
+      "title": "Development of an Improved YOLOv7-Based Model for Detecting Defects on Strip Steel Surfaces",
+      "authors": "Research article",
+      "publisher_or_venue": "Coatings, 13(3), 536",
+      "year": 2023,
+      "type": "research_article",
+      "url": "https://www.mdpi.com/2079-6412/13/3/536",
+      "supports": "Visual descriptions and candidate formation mechanisms for the six NEU defect classes. Treat causal descriptions as supporting literature, not plant-specific proof."
+    },
+    "S11": {
+      "title": "ГОСТ 21014-2022: Metal products made of steel and alloys. Surface defects. Terms and definitions",
+      "authors": "Interstate Standard",
+      "publisher_or_venue": "GOST / Interstate Standard",
+      "year": 2022,
+      "type": "standard",
+      "url": "https://meganorm.ru/mega_doc/norm/gost_gosudarstvennyj-standart/13/gost_21014-2022_mezhgosudarstvennyy-standart.html",
+      "supports": "Standardized terminology/examples for rolled impressions, pickling tints and overpickling/pitting-type surface defects."
+    }
+  },
+  "rag_output_contract": {
+    "required_fields": [
+      "defect_class",
+      "visual_evidence",
+      "probable_origin_hypothesis",
+      "alternative_hypotheses",
+      "recommended_investigation",
+      "confidence",
+      "source_ids"
+    ],
+    "confidence_definition": {
+      "high": "Multiple independent fingerprint signals and plant/process evidence converge on the same hypothesis.",
+      "medium": "Visual fingerprint supports a mechanism, but plant/process evidence is incomplete.",
+      "low": "Several mechanisms remain plausible or the visual evidence is insufficient."
+    },
+    "required_language": "Use terms such as 'consistent with', 'supports investigating', 'probable origin', and 'requires validation' when causality is not established."
+  }
+}
