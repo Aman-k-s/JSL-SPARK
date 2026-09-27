@@ -26,7 +26,6 @@ from src.characterize import characterize, detect_pattern
 from src.diagnose import diagnose
 from src.decide import decide
 from src.calibrate import calibrate_confidence
-from src.gradcam import generate_gradcam
 from src.anomaly import evaluate_anomaly
 from src.process_correlate import correlate_process_parameters
 from src.feedback import record_confirmation, record_correction
@@ -177,15 +176,14 @@ def draw_detections(image_np: np.ndarray, detections: list) -> np.ndarray:
 
 # Sidebar: Parameters & Knowledge Base Metadata
 st.sidebar.markdown("### System Parameters")
-st.sidebar.caption("Hot Strip Mill Quality Control Node")
+st.sidebar.caption("Strip Mill Quality Control Node")
 
 conf_threshold = st.sidebar.slider("Detection Confidence Cutoff", min_value=0.10, max_value=0.90, value=0.25, step=0.05)
-enable_gradcam = st.sidebar.checkbox("Compute Grad-CAM Activation Heatmap", value=False)
 anomaly_threshold = st.sidebar.slider("Out-of-Distribution Sensitivity", min_value=0.40, max_value=0.90, value=0.65, step=0.05)
 
 
 # Main Header
-st.markdown('<div class="header-title">Hot-Rolled Steel Surface Quality & Root-Cause Platform</div>', unsafe_allow_html=True)
+st.markdown('<div class="header-title">Steel Surface Quality & Root-Cause Platform</div>', unsafe_allow_html=True)
 st.markdown('<div class="header-subtitle">JSL Vision Diagnostics | Automated YOLOv8 Detection | Morphological Fingerprinting | Metallurgical Domain RAG (48 Curated Passages, 11 Technical Sources)</div>', unsafe_allow_html=True)
 
 # Main Navigation Tabs
@@ -238,12 +236,12 @@ with tab_inspection:
         else:
             class_options = {
                 "All Defect Classes": None,
-                "Crazing": "crazing",
                 "Inclusion": "inclusion",
                 "Patches": "patches",
                 "Pitted Surface": "pitted_surface",
                 "Rolled-in Scale": "rolled-in_scale",
                 "Scratches": "scratches",
+                "Crazing": "crazing",
             }
             
             sub_c1, sub_c2 = st.columns([1, 1.2])
@@ -259,9 +257,9 @@ with tab_inspection:
             if target_prefix:
                 filtered_samples = [f.name for f in sorted(val_dir.glob(f"{target_prefix}_*.jpg"))]
             else:
-                # Include specimens from all 6 classes evenly
+                # Include specimens from all 6 classes, with crazing at the bottom
                 all_files_by_class = []
-                for pfx in ["crazing", "inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches"]:
+                for pfx in ["inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches", "crazing"]:
                     all_files_by_class.extend([f.name for f in sorted(val_dir.glob(f"{pfx}_*.jpg"))])
                 filtered_samples = all_files_by_class
 
@@ -320,11 +318,6 @@ with tab_inspection:
                 st.markdown('<div class="panel-card-title">Specimen Imagery & Spatial Annotations</div>', unsafe_allow_html=True)
                 annotated_img = draw_detections(img_rgb, raw_detections)
                 st.image(annotated_img, caption=f"Specimen: {selected_image_path.name} | Resolution: {w}x{h} | Detections: {len(raw_detections)}", use_container_width=True)
-
-                if enable_gradcam:
-                    with st.spinner("Computing convolutional activation gradients..."):
-                        gradcam_overlay, _ = generate_gradcam(str(selected_image_path))
-                        st.image(gradcam_overlay, caption="Grad-CAM Activation Heatmap (Backbone SPPF Layer)", use_container_width=True)
 
             with col_metrics:
                 st.markdown('<div class="panel-card-title">Defect Characterization & Metallurgical Diagnosis</div>', unsafe_allow_html=True)
@@ -447,7 +440,7 @@ with tab_inspection:
                     with f_col2:
                         with st.popover("Submit Technical Correction", use_container_width=True):
                             st.markdown("**Domain Expert Correction Form**")
-                            corr_class = st.selectbox("Validated Defect Classification:", ["crazing", "inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches"], index=["crazing", "inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches"].index(target_fp["class"]) if target_fp["class"] in ["crazing", "inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches"] else 0)
+                            corr_class = st.selectbox("Validated Defect Classification:", ["inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches", "crazing"], index=["inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches", "crazing"].index(target_fp["class"]) if target_fp["class"] in ["inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches", "crazing"] else 0)
                             corr_text = st.text_area("Corrective Metallurgical Explanation:", placeholder="Specify validated root cause, mill contact point, or thermal mechanism...")
                             if st.button("Commit to Knowledge Base", type="primary"):
                                 if corr_text.strip():
