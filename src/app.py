@@ -2,9 +2,9 @@
 Module: src/app.py
 Description: Enterprise industrial surface defect inspection and metallurgical root-cause platform.
              Features front-page specimen upload, automated YOLOv8 inference, morphological fingerprinting,
-             ChromaDB vector RAG diagnosis based on Tuhin's 48 curated metallurgical passages and 11 sources,
+             ChromaDB vector RAG diagnosis based on 48 curated metallurgical passages and 11 technical sources,
              operational decisioning, Grad-CAM explainability, and an interactive domain assistant.
-# OWNER: Aman & Tuhin
+# OWNER: Plant Quality Systems Engineering
 """
 
 import os
@@ -186,7 +186,7 @@ anomaly_threshold = st.sidebar.slider("Out-of-Distribution Sensitivity", min_val
 
 # Main Header
 st.markdown('<div class="header-title">Hot-Rolled Steel Surface Quality & Root-Cause Platform</div>', unsafe_allow_html=True)
-st.markdown('<div class="header-subtitle">JSL Vision Diagnostics | Automated YOLOv8 Detection | Morphological Fingerprinting | Tuhin Curated RAG KB (48 Passages, 11 Sources)</div>', unsafe_allow_html=True)
+st.markdown('<div class="header-subtitle">JSL Vision Diagnostics | Automated YOLOv8 Detection | Morphological Fingerprinting | Metallurgical Domain RAG (48 Curated Passages, 11 Technical Sources)</div>', unsafe_allow_html=True)
 
 # Main Navigation Tabs
 tab_inspection, tab_assistant = st.tabs(["Automated Surface Inspection", "Metallurgical RAG Assistant"])
@@ -200,7 +200,7 @@ if "rag_chat_history" not in st.session_state:
     st.session_state.rag_chat_history = [
         {
             "role": "assistant",
-            "content": "Metallurgical retrieval assistant initialized with Tuhin's 48-passage knowledge base (11 technical sources). Submit an inquiry regarding defect mechanisms, roll wear, descaling headers, or reference the active surface inspection."
+            "content": "Metallurgical retrieval assistant initialized with curated 48-passage domain knowledge base (11 technical sources). Submit an inquiry regarding defect mechanisms, roll wear, descaling headers, or reference the active surface inspection."
         }
     ]
 
@@ -397,7 +397,7 @@ with tab_inspection:
                             "computed_severity_score": target_fp["severity_score"]
                         })
 
-                    # Display Tuhin's Diagnostic Output Contract
+                    # Display Diagnostic Output Contract
                     st.markdown(f"""
                     <div class="panel-card" style="margin-top: 10px;">
                         <div class="panel-card-title">Metallurgical Probable-Origin Hypothesis</div>

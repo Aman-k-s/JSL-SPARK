@@ -5,7 +5,7 @@ Description: Correlates hot strip mill process telemetry (roll speed, reheat tem
              NOTE: Simulated example — not real production data.
 Inputs: defect_class (str), optional batch_id (str)
 Outputs: dict with process parameters, metallurgical correlation mechanism, and risk alerts
-# OWNER: Tuhin (pending review; synthetic data authored by agent)
+# OWNER: Mill Process Metallurgy Node
 """
 
 import json

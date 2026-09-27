@@ -5,7 +5,7 @@ Description: Interactive Metallurgical RAG (Retrieval-Augmented Generation) Q&A 
              optionally contextualized with the currently inspected defect and process telemetry.
 Inputs: user_query (str), optional current_fingerprint (dict), optional current_diagnosis (dict), optional k (int)
 Outputs: dict with {"answer": str, "cited_passages": list, "query": str}
-# OWNER: Aman (temporary, will hand off to Tuhin & Ravi)
+# OWNER: Domain Systems Engineering
 """
 
 import os

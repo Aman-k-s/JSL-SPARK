@@ -1,11 +1,11 @@
 """
 Module: src/kb/build_index.py
 Description: Builds and populates the vector index in ChromaDB using sentence-transformers (all-MiniLM-L6-v2).
-             Loads the 48 curated metallurgical passages authored by Tuhin from steel_surface_metallurgy_rag_kb_final.json,
+             Loads the 48 curated metallurgical passages from steel_surface_metallurgy_rag_kb_final.json,
              complete with 11 academic/technical source mappings and evidence levels.
 Inputs: src/kb/steel_surface_metallurgy_rag_kb_final.json
 Outputs: Persistent ChromaDB collection at src/kb/chroma_db
-# OWNER: Ravi & Tuhin (built by Aman)
+# OWNER: Knowledge Retrieval Infrastructure
 """
 
 import os
@@ -25,9 +25,9 @@ EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 PASSAGES_COMPAT_PATH = BASE_DIR / "passages.json"
 
 
-def load_tuhin_kb(filepath: Path = KB_JSON_PATH) -> Tuple[List[Dict[str, Any]], Dict[str, Any], Dict[str, Any]]:
+def load_curated_kb(filepath: Path = KB_JSON_PATH) -> Tuple[List[Dict[str, Any]], Dict[str, Any], Dict[str, Any]]:
     """
-    Load curated metallurgical knowledge base from Tuhin's final JSON file.
+    Load curated metallurgical knowledge base from JSON file.
     Returns (passages, sources, diagnostic_policy).
     """
     target = filepath if filepath.exists() else FALLBACK_KB_JSON_PATH
@@ -67,11 +67,11 @@ def build_index(
     model_name: str = EMBEDDING_MODEL_NAME
 ):
     """
-    Build or rebuild the ChromaDB vector index from Tuhin's curated metallurgical KB.
+    Build or rebuild the ChromaDB vector index from the curated metallurgical KB.
     Indexes all 48 passages with rich relation types, evidence levels, and source citations.
     """
     print(f"Loading curated knowledge base from {kb_path}...")
-    passages, sources, policy = load_tuhin_kb(kb_path)
+    passages, sources, policy = load_curated_kb(kb_path)
     print(f"Found {len(passages)} passages backed by {len(sources)} technical sources.")
 
     # Save a clean passages copy for backward compatibility

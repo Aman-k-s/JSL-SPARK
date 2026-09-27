@@ -1,12 +1,12 @@
 """
 Module: src/diagnose.py
 Description: Generates metallurgical probable-origin hypothesis and recommended investigation actions
-             strictly grounded in Tuhin's 48 curated knowledge base passages.
-             Adheres to Tuhin's diagnostic policy: avoids declaring definitive root causes from images alone.
+             strictly grounded in 48 curated domain knowledge base passages.
+             Adheres to metallurgical diagnostic policy: avoids declaring definitive root causes from images alone.
 Inputs: fingerprint (dict from characterize.py)
 Outputs: dict with probable_origin, probable_origin_hypothesis, recommended_investigation,
          cited_passage_id, source_ids, evidence_level, confidence, retrieved_passages.
-# OWNER: Aman & Tuhin
+# OWNER: Metallurgical Quality Systems Engineering
 """
 
 import os
@@ -111,9 +111,9 @@ def diagnose(
     k: int = 3
 ) -> Dict[str, Any]:
     """
-    Diagnose metallurgical origin hypothesis and recommended investigation action using Tuhin's KB.
+    Diagnose metallurgical origin hypothesis and recommended investigation action using curated domain KB.
 
-    Policy Constraints (from Tuhin's Diagnostic Policy):
+    Policy Constraints (Metallurgical Diagnostic Policy):
     - Output a probable-origin hypothesis, not a definitive root-cause claim, from visual evidence alone.
     - Always cite the retrieved passage ID and technical source IDs.
     - Recommend concrete plant investigation actions to validate the mechanism.
@@ -143,7 +143,7 @@ def diagnose(
 
     top_score = retrieved[0]["score"]
 
-    # Build context for LLM with Tuhin's passages and sources
+    # Build context for LLM with curated passages and sources
     context_str = "\n\n".join([
         f"[Passage ID: {p['id']}]\n"
         f"Relation Type: {p.get('relation_type', '')} | Evidence Level: {p.get('evidence_level', '')}\n"
@@ -240,7 +240,7 @@ if __name__ == "__main__":
         "severity": "Medium",
         "pattern": "repetitive"
     }
-    print("Testing diagnose() with Tuhin's 48-passage KB...")
+    print("Testing diagnose() with curated 48-passage domain KB...")
     res = diagnose(sample_fp)
     print("\nPROBABLE-ORIGIN HYPOTHESIS:\n", res["probable_origin_hypothesis"])
     print("\nRECOMMENDED INVESTIGATION:\n", res["recommended_investigation"])

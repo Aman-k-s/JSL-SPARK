@@ -38,20 +38,20 @@ Automated end-to-end industrial inspection platform for hot-rolled steel surface
 
 ## Module Structure & Team Ownership
 
-- **`src/detect.py`** (`# OWNER: Aman`): Ultralytics YOLOv8 wrapper on `models/best.pt` extracting bounding boxes, classes, and confidence scores.
-- **`src/characterize.py`** (`# OWNER: Aman`): Computes morphology (elongated vs compact), spatial location (edge vs center via 15% outer margin), affected area %, calibrated severity score, and surface pattern (isolated vs repetitive).
-- **`src/calibrate.py`** (`# OWNER: Aman`): Post-hoc Temperature Scaling confidence calibrator fitted on validation set detections (35.5% ECE reduction).
-- **`src/kb/passages.json`** (`# OWNER: Tuhin (pending review)`): 36 domain-researched metallurgical passages across 6 NEU-DET defect classes (crazing, inclusion, patches, pitted surface, rolled-in scale, scratches).
-- **`src/kb/build_index.py`** (`# OWNER: Ravi (built by Aman)`): Embeds passages with `sentence-transformers` (`all-MiniLM-L6-v2`) and builds ChromaDB vector index.
-- **`src/kb/retrieve.py`** (`# OWNER: Ravi (built by Aman)`): Vector similarity retrieval returning cosine similarity scores and metadata.
-- **`src/diagnose.py`** (`# OWNER: Aman (for Tuhin)`): Template-fills natural language queries and synthesizes grounded root causes using Groq LLM with strict passage citations.
-- **`src/decide.py`** (`# OWNER: Aman`): Rule-based decision layer determining operational disposition (`Inspect` / `Grind` / `Escalate`).
-- **`src/gradcam.py`** (`# OWNER: Aman`): Activation heatmap overlay on the YOLOv8 backbone SPPF layer for visual explainability.
-- **`src/anomaly.py`** (`# OWNER: Ravi (built by Aman)`): One-Class SVM on pooled YOLOv8 backbone features detecting out-of-distribution flaws.
-- **`src/process_correlate.py`** (`# OWNER: Tuhin (provisional)`): Correlates hot strip mill process telemetry (reheat temp, roll speed, chemistry) with defects.
-- **`src/feedback.py`** (`# OWNER: Aman`): Active feedback loop recording operator confirmations and domain corrections with live ChromaDB re-indexing.
-- **`src/rag_assistant.py`** (`# OWNER: Aman (for Tuhin & Ravi)`): Interactive RAG assistant answering technical questions grounded in the knowledge base and active inspection context.
-- **`src/app.py`** (`# OWNER: Aman`): Industrial Streamlit application integrating all stages.
+- **`src/detect.py`**: Ultralytics YOLOv8 wrapper on `models/best.pt` extracting bounding boxes, classes, and confidence scores.
+- **`src/characterize.py`**: Computes morphology (elongated vs compact), spatial location (edge vs center via 15% outer margin), affected area %, calibrated severity score, and surface pattern (isolated vs repetitive).
+- **`src/calibrate.py`**: Post-hoc Temperature Scaling confidence calibrator fitted on validation set detections (35.5% ECE reduction).
+- **`src/kb/passages.json`**: 48 domain-researched metallurgical passages across 6 NEU-DET defect classes (crazing, inclusion, patches, pitted surface, rolled-in scale, scratches) backed by 11 technical sources.
+- **`src/kb/build_index.py`**: Embeds passages with `sentence-transformers` (`all-MiniLM-L6-v2`) and builds ChromaDB vector index.
+- **`src/kb/retrieve.py`**: Vector similarity retrieval returning cosine similarity scores and metadata.
+- **`src/diagnose.py`**: Grounded root-cause diagnosis using Groq LLM with strict passage citations and diagnostic investigation actions.
+- **`src/decide.py`**: Rule-based decision layer determining operational disposition (`Inspect` / `Grind` / `Escalate`).
+- **`src/gradcam.py`**: Activation heatmap overlay on the YOLOv8 backbone SPPF layer for visual explainability.
+- **`src/anomaly.py`**: One-Class SVM on pooled YOLOv8 backbone features detecting out-of-distribution flaws.
+- **`src/process_correlate.py`**: Correlates hot strip mill process telemetry (reheat temp, roll speed, chemistry) with defects.
+- **`src/feedback.py`**: Active feedback loop recording operator confirmations and domain corrections with live ChromaDB re-indexing.
+- **`src/rag_assistant.py`**: Interactive RAG assistant answering technical questions grounded in the knowledge base and active inspection context.
+- **`src/app.py`**: Industrial Streamlit application integrating all stages.
 
 ---
 
