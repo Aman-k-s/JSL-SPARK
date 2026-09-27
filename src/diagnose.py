@@ -45,9 +45,22 @@ def build_query(fingerprint: Dict[str, Any]) -> str:
     return query
 
 
+def _get_groq_api_key() -> Optional[str]:
+    """Retrieve Groq API key from environment variable or Streamlit Cloud secrets."""
+    key = os.environ.get("GROQ_API_KEY")
+    if not key:
+        try:
+            import streamlit as st
+            if hasattr(st, "secrets") and "GROQ_API_KEY" in st.secrets:
+                key = st.secrets["GROQ_API_KEY"]
+        except Exception:
+            pass
+    return key
+
+
 def _call_groq_llm(system_prompt: str, user_prompt: str) -> Optional[str]:
     """Call Groq API using groq Python package with fallback models."""
-    api_key = os.environ.get("GROQ_API_KEY")
+    api_key = _get_groq_api_key()
     if not api_key:
         return None
 
