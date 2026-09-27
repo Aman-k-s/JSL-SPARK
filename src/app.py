@@ -211,9 +211,6 @@ with tab_inspection:
     st.markdown('<div class="panel-card-title">Specimen Input & Image Upload</div>', unsafe_allow_html=True)
     
     val_dir = PROJECT_ROOT / "data" / "NEU-DET-final" / "images" / "val"
-    val_samples = []
-    if val_dir.exists():
-        val_samples = [f.name for f in sorted(val_dir.glob("*.jpg"))[:50]]
 
     up_col1, up_col2 = st.columns([1, 1.4])
     
@@ -239,12 +236,43 @@ with tab_inspection:
                 with open(selected_image_path, "wb") as f:
                     f.write(uploaded_file.getbuffer())
         else:
-            chosen_sample = st.selectbox(
-                "Select Specimen from Validation Set:",
-                val_samples,
-                index=0 if val_samples else None,
-                help="Pre-loaded hot-rolled steel validation specimens covering all 6 defect classes."
-            )
+            class_options = {
+                "All Defect Classes": None,
+                "Crazing": "crazing",
+                "Inclusion": "inclusion",
+                "Patches": "patches",
+                "Pitted Surface": "pitted_surface",
+                "Rolled-in Scale": "rolled-in_scale",
+                "Scratches": "scratches",
+            }
+            
+            sub_c1, sub_c2 = st.columns([1, 1.2])
+            with sub_c1:
+                selected_class_label = st.selectbox(
+                    "Filter Defect Class:",
+                    list(class_options.keys()),
+                    index=0,
+                    help="Filter validation specimens across all 6 defect classes."
+                )
+
+            target_prefix = class_options[selected_class_label]
+            if target_prefix:
+                filtered_samples = [f.name for f in sorted(val_dir.glob(f"{target_prefix}_*.jpg"))]
+            else:
+                # Include specimens from all 6 classes evenly
+                all_files_by_class = []
+                for pfx in ["crazing", "inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches"]:
+                    all_files_by_class.extend([f.name for f in sorted(val_dir.glob(f"{pfx}_*.jpg"))])
+                filtered_samples = all_files_by_class
+
+            with sub_c2:
+                chosen_sample = st.selectbox(
+                    f"Select Specimen ({len(filtered_samples)} available):",
+                    filtered_samples,
+                    index=0 if filtered_samples else None,
+                    help="Select a specimen from the validation set to run vision and metallurgical diagnosis."
+                )
+
             if chosen_sample:
                 selected_image_path = val_dir / chosen_sample
 
@@ -322,6 +350,38 @@ with tab_inspection:
                     m_c3.metric("Severity Level", target_fp["severity"])
                     m_c4.metric("Affected Area", f"{target_fp['affected_area_pct']:.2f}%")
 
+                    # Grounded Diagnosis & Operational Decision Engine
+                    with st.spinner("Querying curated metallurgical knowledge base & evaluating disposition..."):
+                        diag_result = diagnose(target_fp, k=3)
+                        st.session_state.active_diagnosis = diag_result
+                        decision = decide(target_fp, diag_result)
+
+                    action = decision["action"]
+                    badge_class = "status-inspect"
+                    border_color = "#2563EB"
+                    if action == "Escalate":
+                        badge_class = "status-escalate"
+                        border_color = "#DC2626"
+                    elif action == "Grind":
+                        badge_class = "status-grind"
+                        border_color = "#D97706"
+
+                    # Recommended Operational Disposition placed at the top of results
+                    st.markdown(f"""
+                    <div class="panel-card" style="margin-top: 10px; border-left: 4px solid {border_color};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div class="panel-card-title" style="margin: 0; font-size: 1.05rem;">Recommended Operational Disposition</div>
+                            <span class="status-badge {badge_class}">ACTION: {action.upper()}</span>
+                        </div>
+                        <div style="font-size: 0.92rem; color: #1E293B; line-height: 1.5; font-weight: 500;">
+                            {decision['rationale']}
+                        </div>
+                        <div style="font-size: 0.78rem; color: #64748B; margin-top: 6px;">
+                            Triggered Protocol: <code>{decision['rule_triggered']}</code>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
                     with st.expander("Morphological Metrics Summary", expanded=False):
                         st.json({
                             "classification": target_fp["class"],
@@ -336,11 +396,6 @@ with tab_inspection:
                             "distribution_pattern": target_fp["pattern"],
                             "computed_severity_score": target_fp["severity_score"]
                         })
-
-                    # Grounded Diagnosis using Tuhin's KB
-                    with st.spinner("Querying curated metallurgical knowledge base..."):
-                        diag_result = diagnose(target_fp, k=3)
-                        st.session_state.active_diagnosis = diag_result
 
                     # Display Tuhin's Diagnostic Output Contract
                     st.markdown(f"""
@@ -361,31 +416,6 @@ with tab_inspection:
                         </div>
                         <div style="font-size: 0.76rem; color: #94A3B8; margin-top: 4px;">
                             References: {diag_result['source_citations']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                    # Decision Engine
-                    decision = decide(target_fp, diag_result)
-                    action = decision["action"]
-
-                    badge_class = "status-inspect"
-                    if action == "Escalate":
-                        badge_class = "status-escalate"
-                    elif action == "Grind":
-                        badge_class = "status-grind"
-
-                    st.markdown(f"""
-                    <div class="panel-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <div class="panel-card-title" style="margin: 0;">Recommended Operational Disposition</div>
-                            <span class="status-badge {badge_class}">ACTION: {action.upper()}</span>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #334155; line-height: 1.5;">
-                            {decision['rationale']}
-                        </div>
-                        <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 6px;">
-                            Triggered Protocol: <code>{decision['rule_triggered']}</code>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
