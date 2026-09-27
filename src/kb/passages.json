@@ -1,0 +1,218 @@
+[
+  {
+    "id": "CRZ-001",
+    "defect_class": "crazing",
+    "text": "Crazing typically manifests as an interconnected, fine network of shallow surface micro-cracks or 'checking' pattern on the hot-rolled steel surface. A primary metallurgical root cause is roll thermal fatigue (fire cracking) on hot strip mill work rolls, where repeated rapid heating and cooling cycles transfer imprinted crack networks onto the hot plastic steel strip.",
+    "source": "Metallurgical defect analysis of hot rolling, pending citation"
+  },
+  {
+    "id": "CRZ-002",
+    "defect_class": "crazing",
+    "text": "In hot-rolled austenitic and carbon steels, crazing can be exacerbated by copper contamination and residual tramp element accumulation at grain boundaries (hot shortness). When steel contains excess copper or tin, molten copper-rich phases penetrate austenite grain boundaries during high-temperature reheating (1100-1250 deg C), leading to boundary tearing under hot rolling tension.",
+    "source": "Physical metallurgy of steel rolling, pending citation"
+  },
+  {
+    "id": "CRZ-003",
+    "defect_class": "crazing",
+    "text": "Severe thermal gradient between the strip surface and work roll contact zone, especially when roll cooling spray headers suffer from clogged nozzles or uneven spray pressure, promotes uneven cooling stresses that nucleate micro-crazing networks across the strip width.",
+    "source": "Rolling mill operational guide, pending citation"
+  },
+  {
+    "id": "CRZ-004",
+    "defect_class": "crazing",
+    "text": "Crazing defects characterized as compact and widespread across the center of the strip are frequently roll-wear related, whereas crazing concentrated near strip edges often correlates with excessive edge reheating, edge over-reduction, or severe roll edge chilling from misaligned cooling headers.",
+    "source": "Hot strip defect classification handbook, pending citation"
+  },
+  {
+    "id": "CRZ-005",
+    "defect_class": "crazing",
+    "text": "Corrective operational actions for recurring crazing include immediate inspection of work roll barrels for thermal fire-cracking, verifying roll cooling water flow rate and nozzle spray alignment, and confirming that reheat furnace residence times do not cause excessive selective grain-boundary oxidation.",
+    "source": "Mill maintenance best practices, pending citation"
+  },
+  {
+    "id": "CRZ-006",
+    "defect_class": "crazing",
+    "text": "Differential thermal contraction during laminar cooling after the finishing stands can propagate surface crazing if cooling water temperature is abnormally low or high-pressure water jets cause extreme localized quenching on high-strength microalloyed steel strip.",
+    "source": "Strip laminar cooling research, pending citation"
+  },
+  {
+    "id": "INC-001",
+    "defect_class": "inclusion",
+    "text": "Surface non-metallic inclusions in hot-rolled steel originate upstream during steelmaking, secondary metallurgy, or continuous casting. They consist predominantly of deoxidation products (alumina Al2O3 clusters), ladle slag entrapment (calcium aluminates), or mold powder entrainment at the meniscus during turbulent mold level fluctuations.",
+    "source": "Clean steelmaking and casting principles, pending citation"
+  },
+  {
+    "id": "INC-002",
+    "defect_class": "inclusion",
+    "text": "During hot rolling, macroscopic brittle alumina inclusions fracture and elongate along the rolling direction into linear stringers or sliver-like clusters. When located near or at the surface, subsequent deformation strips the thin matrix cover, exposing dark, irregular inclusion pockets.",
+    "source": "Deformation behavior of non-metallic inclusions in hot rolling, pending citation"
+  },
+  {
+    "id": "INC-003",
+    "defect_class": "inclusion",
+    "text": "Inclusions appearing as elongated strings with high aspect ratios aligned with rolling direction strongly indicate non-deformable indigenous inclusions broken during heavy rolling reduction, commonly linked to inadequate argon purging or tundish shrouding reoxidation.",
+    "source": "Continuous casting defect diagnosis guide, pending citation"
+  },
+  {
+    "id": "INC-004",
+    "defect_class": "inclusion",
+    "text": "Exogenous inclusions such as ladle shroud refractory fragments or nozzle clogs dislodged into the mold generally create isolated, more compact or irregular globular defects with surrounding matrix tears, distinguishable from continuous indigenous deoxidation stringers.",
+    "source": "Refractory-steel interaction handbook, pending citation"
+  },
+  {
+    "id": "INC-005",
+    "defect_class": "inclusion",
+    "text": "Remediation for surface inclusions mandates tightening argon bottom-stirring in ladle treatment to promote flotation of deoxidation products, maintaining stable mold level control (+/- 3mm), and inspecting submerged entry nozzles (SEN) for argon clogging and bias flow.",
+    "source": "Secondary metallurgy standard operational practices, pending citation"
+  },
+  {
+    "id": "INC-006",
+    "defect_class": "inclusion",
+    "text": "Subsurface inclusions located within the outer 1-2 mm of cast slabs become surface defects after slab reheating in walking-beam furnaces, where prolonged soaking causes surface scale loss (scaling off) that uncovers previously subsurface inclusion entrapped bands.",
+    "source": "Reheat furnace scaling and decarburization notes, pending citation"
+  },
+  {
+    "id": "PAT-001",
+    "defect_class": "patches",
+    "text": "Patches in hot-rolled strip typically present as localized, irregular plate-like or island-shaped surface laminations or scabs. Metallurgically, patches commonly arise from rolled-over steel remnants, splash scabs formed during ingot or slab teeming, or partially welded loose fragments from upstream roughing mill passes.",
+    "source": "Hot-rolled flat products defect atlas, pending citation"
+  },
+  {
+    "id": "PAT-002",
+    "defect_class": "patches",
+    "text": "A frequent operational cause of patch defects is roll peel (band shelling) on high-chromium or ductile iron work rolls. When high rolling contact stresses cause localized spalling or work-layer peeling from the roll barrel, the indented strip accumulates compressed flake-like patch layers.",
+    "source": "Work roll wear mechanisms in hot strip rolling, pending citation"
+  },
+  {
+    "id": "PAT-003",
+    "defect_class": "patches",
+    "text": "Patches exhibiting a compact morphology and elevated thickness boundary often indicate slivers or torn steel tears folded back onto the strip surface and flattened during subsequent reduction stands without achieving complete solid-state diffusion bonding.",
+    "source": "Surface defects in steel sheet processing, pending citation"
+  },
+  {
+    "id": "PAT-004",
+    "defect_class": "patches",
+    "text": "In continuous casting, severe longitudinal facial cracks or corner tears on the slab that undergo incomplete scarfed repair can fold into irregular overlapping patches during roughing passes, often appearing near strip edges or quarter-width positions.",
+    "source": "Continuous casting slab defect guide, pending citation"
+  },
+  {
+    "id": "PAT-005",
+    "defect_class": "patches",
+    "text": "Operational prevention of patch defects requires strict roll barrel ultrasonic and eddy-current inspection between campaign changes to avoid spalling, optimizing inter-stand lubrication to lower frictional shear, and ensuring adequate slab scarfing of mold corner bleeds.",
+    "source": "Hot rolling mill operational procedures, pending citation"
+  },
+  {
+    "id": "PAT-006",
+    "defect_class": "patches",
+    "text": "Heavy oxidation at the boundary interface of patch defects confirms that the fold or detached fragment separated prior to or inside the reheat furnace, whereas metallic clean boundaries without scale suggest mechanical pinching in finishing stands.",
+    "source": "Metallographic examination of steel defects, pending citation"
+  },
+  {
+    "id": "PIT-001",
+    "defect_class": "pitted_surface",
+    "text": "Pitted surface defects consist of dense, localized depressions, cavities, or dimpled craters across the steel surface. Mechanistically, pitting is predominantly caused by rolled-in primary or secondary iron oxide scale that subsequently flakes off or is removed during descaling or pickling, leaving residual indentations.",
+    "source": "Hot strip pickling and surface quality guide, pending citation"
+  },
+  {
+    "id": "PIT-002",
+    "defect_class": "pitted_surface",
+    "text": "Insufficient hydraulic descaling header pressure or plugged descaler nozzles at the entry of the roughing or finishing mill leave tenacious tertiary wustite/magnetite scale on the strip. As the strip passes through work rolls, the unremoved oxide nodules are impressed into the matrix, forming characteristic pits.",
+    "source": "Descaling hydraulic engineering handbook, pending citation"
+  },
+  {
+    "id": "PIT-003",
+    "defect_class": "pitted_surface",
+    "text": "Roll surface pitting due to roll graphite degradation or mechanical abrasive wear on finishing stand rolls transfers positive dimple impressions onto the steel strip, which appear as repetitive pitted surface zones matched to roll circumference.",
+    "source": "Roll wear and surface degradation analysis, pending citation"
+  },
+  {
+    "id": "PIT-004",
+    "defect_class": "pitted_surface",
+    "text": "Acid over-pickling during continuous pickling lines can aggressively attack grain boundaries and grain matrices surrounding micro-inclusions or scale remnants, transforming minor shallow impressions into deep, jagged pitted surfaces.",
+    "source": "Steel pickling chemistry and defect prevention, pending citation"
+  },
+  {
+    "id": "PIT-005",
+    "defect_class": "pitted_surface",
+    "text": "When pitted surface defects exhibit widespread repetitive clusters across large surface percentages (>20%), the primary root cause points directly to descaler header malfunction (low pressure < 150 bar or nozzle clogging) or an end-of-campaign worn roll barrel.",
+    "source": "Hot rolling quality control manual, pending citation"
+  },
+  {
+    "id": "PIT-006",
+    "defect_class": "pitted_surface",
+    "text": "Corrective measures for pitted surfaces include immediate audit of descaling nozzle discharge patterns, measurement of descaling water accumulator pressures, and regrinding or scheduling replacement of finishing work rolls.",
+    "source": "Mill maintenance and quality protocols, pending citation"
+  },
+  {
+    "id": "RIS-001",
+    "defect_class": "rolled-in_scale",
+    "text": "Rolled-in scale is one of the most prevalent hot rolling surface defects. It occurs when primary furnace scale, secondary scale formed in roughing delay, or tertiary scale in the finishing train is not completely removed by high-pressure descaling water and gets pressed into the soft steel substrate by the rolling work rolls.",
+    "source": "Hot rolling metallurgy and scale formation, pending citation"
+  },
+  {
+    "id": "RIS-002",
+    "defect_class": "rolled-in_scale",
+    "text": "Primary rolled-in scale results from excessive furnace soaking time or oxidizing air-fuel ratio in the reheat furnace. It forms thick, tenacious magnetite (Fe3O4) and hematite (Fe2O3) layers with sub-scale pegging into grain boundaries, especially in silicon-bearing or nickel-bearing steels where fayalite (Fe2SiO4) forms a low-melting eutectic.",
+    "source": "Reheat furnace atmosphere and high-temperature oxidation of steel, pending citation"
+  },
+  {
+    "id": "RIS-003",
+    "defect_class": "rolled-in_scale",
+    "text": "Secondary and tertiary rolled-in scale generally exhibits a fish-scale, streak, or speckle pattern along the rolling direction. It is frequently caused by inadequate finishing entry descaling pressure (typically recommended above 180-200 bar), worn descaling nozzle tips, or spray overlap gaps between adjacent nozzles.",
+    "source": "Hydraulic descaling optimization in hot strip mills, pending citation"
+  },
+  {
+    "id": "RIS-004",
+    "defect_class": "rolled-in_scale",
+    "text": "Rolled-in scale defects located predominantly along strip edges typically result from edge-cooling spray imbalances or insufficient header width coverage, allowing fast scale regrowth at strip shoulders during inter-stand transit.",
+    "source": "Strip width and edge temperature control, pending citation"
+  },
+  {
+    "id": "RIS-005",
+    "defect_class": "rolled-in_scale",
+    "text": "Under metallographic cross-section, rolled-in scale displays dark iron oxide phases mechanically locked beneath deformed steel matrix folds. Distinguishing rolled-in scale from inclusions is confirmed by optical microscopy showing multi-phase oxide layers (wustite, magnetite) rather than isolated alumina or calcium silicate crystals.",
+    "source": "Metallographic identification of steel surface flaws, pending citation"
+  },
+  {
+    "id": "RIS-006",
+    "defect_class": "rolled-in_scale",
+    "text": "Remediation protocols for rolled-in scale demand immediate descaler nozzle inspection for clogging or erosion, maintaining reheat furnace atmosphere lambda closer to stoichiometric (avoiding high excess O2), and controlling delay table transfer times.",
+    "source": "Hot strip operational standards, pending citation"
+  },
+  {
+    "id": "SCR-001",
+    "defect_class": "scratches",
+    "text": "Scratches are mechanical longitudinal or transverse surface gouges and abrasions formed by sliding friction contact between moving steel strip and stationary or misaligned mill hardware. Common contact points include transfer table aprons, side guides, loopers, descaler entry headers, coiler wrapper rolls, or accumulated metal burrs on guide shoes.",
+    "source": "Mechanical damage and surface defects in hot rolling, pending citation"
+  },
+  {
+    "id": "SCR-002",
+    "defect_class": "scratches",
+    "text": "Hot-state scratches occurring in roughing or early finishing stands present with rounded, oxidized furrow bottoms and rolled-down scratch lips due to subsequent reduction passes. In contrast, cold-state scratches inflicted on run-out tables, pinch rolls, or downcoilers exhibit bright, sharp-edged metallic grooves without internal high-temperature scale.",
+    "source": "Classification and origin of scratches in flat steel, pending citation"
+  },
+  {
+    "id": "SCR-003",
+    "defect_class": "scratches",
+    "text": "Elongated scratches with high aspect ratios aligned strictly parallel to the rolling direction point directly to stationary contact points such as stuck roller table rolls, grooved side guide plates, or foreign debris wedged in the strip pass-line.",
+    "source": "Hot strip mill pass-line diagnostic guide, pending citation"
+  },
+  {
+    "id": "SCR-004",
+    "defect_class": "scratches",
+    "text": "Scratches localized near strip edges are characteristically produced by tight or misaligned side guides that pinch oscillating strip edges during threading or rapid acceleration through the mill stands.",
+    "source": "Strip tracking and guiding troubleshooting, pending citation"
+  },
+  {
+    "id": "SCR-005",
+    "defect_class": "scratches",
+    "text": "Transverse or diagonal gouges and scratches can be caused by coil handling equipment, walking beam conveyor saddles, overhead crane C-hooks, or banding strap rubbing during coil transfer to storage yards.",
+    "source": "Coil handling and packaging damage prevention, pending citation"
+  },
+  {
+    "id": "SCR-006",
+    "defect_class": "scratches",
+    "text": "Operational remediation for scratch defects requires immediate pass-line inspection to detect locked roller bearings, dressing or replacing worn side guide liners with low-friction bronze/carbide materials, and ensuring strip catenary does not drag on table covers.",
+    "source": "Mill mechanical maintenance protocols, pending citation"
+  }
+]

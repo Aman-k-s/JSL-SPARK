@@ -1,0 +1,17 @@
+# Sensitive credentials
+.env
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ChromaDB persistence cache
+.chromadb/
+chroma_db/
+src/kb/chroma_db/
+
+# Scratch & runtime artifacts
+scratch/
+runs/
+*.log

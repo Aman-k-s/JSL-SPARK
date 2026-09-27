@@ -1,0 +1,110 @@
+[
+  {
+    "batch_id": "BATCH-2024-CRZ-01",
+    "steel_grade": "AISI-304-Cu",
+    "furnace_exit_temp_c": 1265,
+    "finishing_entry_temp_c": 1040,
+    "roll_speed_mpm": 720,
+    "descaling_pressure_bar": 195,
+    "roll_campaign_tonnage": 1850,
+    "chemistry_wt_pct": {
+      "C": 0.05,
+      "Mn": 1.45,
+      "Si": 0.38,
+      "Cu": 0.32,
+      "Ni": 8.15,
+      "Cr": 18.20,
+      "total_oxygen_ppm": 14
+    },
+    "correlated_defect_risk": "crazing",
+    "correlation_mechanism": "High furnace reheat temperature (1265°C) combined with elevated residual copper (0.32 wt% Cu) promotes liquid copper grain boundary penetration (hot shortness). High roll campaign tonnage (1850 t) compounds surface checking via fire-cracked roll wear."
+  },
+  {
+    "batch_id": "BATCH-2024-INC-02",
+    "steel_grade": "Ladle-Killed-Deep-Draw",
+    "furnace_exit_temp_c": 1210,
+    "finishing_entry_temp_c": 980,
+    "roll_speed_mpm": 850,
+    "descaling_pressure_bar": 200,
+    "roll_campaign_tonnage": 450,
+    "chemistry_wt_pct": {
+      "C": 0.03,
+      "Mn": 0.28,
+      "Si": 0.02,
+      "Al": 0.045,
+      "total_oxygen_ppm": 38
+    },
+    "correlated_defect_risk": "inclusion",
+    "correlation_mechanism": "Severe total oxygen excursion (38 ppm) and high soluble aluminum (0.045 wt%) indicate excessive secondary reoxidation and Al2O3 cluster entrapment, generating linear stringer inclusions under rolling elongation."
+  },
+  {
+    "batch_id": "BATCH-2024-PAT-03",
+    "steel_grade": "AISI-430-Ferritic",
+    "furnace_exit_temp_c": 1190,
+    "finishing_entry_temp_c": 960,
+    "roll_speed_mpm": 680,
+    "descaling_pressure_bar": 190,
+    "roll_campaign_tonnage": 2100,
+    "chemistry_wt_pct": {
+      "C": 0.06,
+      "Mn": 0.65,
+      "Si": 0.42,
+      "Cr": 16.40,
+      "total_oxygen_ppm": 16
+    },
+    "correlated_defect_risk": "patches",
+    "correlation_mechanism": "High roll campaign tonnage (2100 t) approaching work layer fatigue limit triggered work roll peeling (band shelling) on finishing stand F2, transferring compressed scab-like patches onto the strip surface."
+  },
+  {
+    "batch_id": "BATCH-2024-PIT-04",
+    "steel_grade": "Structural-Medium-Carbon",
+    "furnace_exit_temp_c": 1225,
+    "finishing_entry_temp_c": 975,
+    "roll_speed_mpm": 810,
+    "descaling_pressure_bar": 138,
+    "roll_campaign_tonnage": 1420,
+    "chemistry_wt_pct": {
+      "C": 0.18,
+      "Mn": 0.85,
+      "Si": 0.48,
+      "total_oxygen_ppm": 19
+    },
+    "correlated_defect_risk": "pitted_surface",
+    "correlation_mechanism": "Critical descaling header pressure drop (138 bar vs nominal 190+ bar) failed to dislodge secondary scale. High silicon (0.48 wt%) facilitated fayalite root anchoring, producing severe indentations that pickled out as pitted surface cavities."
+  },
+  {
+    "batch_id": "BATCH-2024-RIS-05",
+    "steel_grade": "Hot-Rolled-Si-Bearing-HSLA",
+    "furnace_exit_temp_c": 1280,
+    "finishing_entry_temp_c": 1010,
+    "roll_speed_mpm": 760,
+    "descaling_pressure_bar": 142,
+    "roll_campaign_tonnage": 1200,
+    "chemistry_wt_pct": {
+      "C": 0.12,
+      "Mn": 1.20,
+      "Si": 0.55,
+      "Nb": 0.035,
+      "total_oxygen_ppm": 18
+    },
+    "correlated_defect_risk": "rolled-in_scale",
+    "correlation_mechanism": "Extended furnace soak at 1280°C combined with high silicon content (0.55 wt% Si) generated tenacious fayalite (Fe2SiO4) eutectic scale layers. Sub-nominal descaling pressure (142 bar) resulted in embedded rolled-in scale streaks."
+  },
+  {
+    "batch_id": "BATCH-2024-SCR-06",
+    "steel_grade": "Cold-Rolled-Feedstock-Mild",
+    "furnace_exit_temp_c": 1205,
+    "finishing_entry_temp_c": 940,
+    "roll_speed_mpm": 1080,
+    "descaling_pressure_bar": 205,
+    "roll_campaign_tonnage": 650,
+    "chemistry_wt_pct": {
+      "C": 0.04,
+      "Mn": 0.35,
+      "Si": 0.03,
+      "total_oxygen_ppm": 12
+    },
+    "correlated_defect_risk": "scratches",
+    "correlation_mechanism": "Excessive strip threading velocity (1080 m/min) caused severe side guide chatter and strip tracking oscillation, pinching strip shoulders against stationary guide aprons and imparting longitudinal scratches."
+  }
+]
