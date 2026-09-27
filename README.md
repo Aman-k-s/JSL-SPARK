@@ -5,16 +5,23 @@
 [![ChromaDB](https://img.shields.io/badge/VectorDB-ChromaDB-orange?logo=databricks)](https://www.trychroma.com/)
 [![LLM Engine](https://img.shields.io/badge/LLM-Groq%20Llama--3.3--70B-f55036?logo=groq)](https://groq.com/)
 [![Framework](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit)](https://streamlit.io/)
+[![Presentation](https://img.shields.io/badge/Slide%20Deck-Google%20Drive-4285F4?logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1-RZ6eYCOYMQSU7XvfYYbCbSNKjrXydqx/view?usp=sharing)
+[![Demo Video](https://img.shields.io/badge/Demo%20Video-YouTube-red?logo=youtube&logoColor=white)](https://youtu.be/r08QByG-3Pk)
 [![License](https://img.shields.io/badge/License-Proprietary%20%2F%20JSL-lightgrey)]()
 
 An automated end-to-end industrial inspection and root-cause analysis platform for steel strip surface defects. Built on fine-tuned **YOLOv8** object detection, **Temperature Scaling** statistical calibration, **morphological defect fingerprinting**, **ChromaDB vector retrieval** over peer-reviewed metallurgical failure literature, deterministic **operational decisioning**, **One-Class SVM anomaly detection**, and a conversational **metallurgical RAG assistant**.
+
+> **Project Media & Resources:**
+> - **Presentation Slide Deck (PPT):** [Google Drive Link](https://drive.google.com/file/d/1-RZ6eYCOYMQSU7XvfYYbCbSNKjrXydqx/view?usp=sharing)
+> - **Full Video Walkthrough:** [YouTube Demonstration](https://youtu.be/r08QByG-3Pk)
 
 ---
 
 ## Table of Contents
 1. [Executive Summary & Problem Statement](#executive-summary--problem-statement)
-2. [End-to-End System Architecture](#end-to-end-system-architecture)
-3. [Key Platform Capabilities](#key-platform-capabilities)
+2. [Project Demonstration & Presentation Links](#project-demonstration--presentation-links)
+3. [End-to-End System Architecture](#end-to-end-system-architecture)
+4. [Key Platform Capabilities](#key-platform-capabilities)
    - [Deep Vision & Spatial Fingerprinting](#1-deep-vision--spatial-fingerprinting)
    - [Statistical Calibration (Temperature Scaling)](#2-statistical-confidence-calibration)
    - [Out-of-Distribution (OOD) Protection](#3-out-of-distribution-ood-detection)
@@ -23,13 +30,22 @@ An automated end-to-end industrial inspection and root-cause analysis platform f
    - [Process Telemetry Correlation](#6-process-telemetry-correlation)
    - [Continuous Domain Feedback Loop](#7-continuous-domain-feedback-loop)
    - [Conversational Technical Assistant](#8-conversational-technical-assistant)
-4. [Supported Defect Classes](#supported-defect-classes)
-5. [Operational Decision Matrix](#operational-decision-matrix)
-6. [Repository & Codebase Structure](#repository--codebase-structure)
-7. [Installation & Local Quickstart](#installation--local-quickstart)
-8. [Streamlit Cloud Deployment Guide](#streamlit-cloud-deployment-guide)
-9. [Test Suite Execution](#test-suite-execution)
-10. [Authors & Attribution](#authors--attribution)
+5. [Supported Defect Classes](#supported-defect-classes)
+6. [Operational Decision Matrix](#operational-decision-matrix)
+7. [Repository & Codebase Structure](#repository--codebase-structure)
+8. [Installation & Local Quickstart](#installation--local-quickstart)
+9. [Streamlit Cloud Deployment Guide](#streamlit-cloud-deployment-guide)
+10. [Test Suite Execution](#test-suite-execution)
+11. [Authors & Attribution](#authors--attribution)
+
+---
+
+## Project Demonstration & Presentation Links
+
+| Resource | Link | Description |
+|---|---|---|
+| **Presentation Deck (PPT)** | [Google Drive Presentation](https://drive.google.com/file/d/1-RZ6eYCOYMQSU7XvfYYbCbSNKjrXydqx/view?usp=sharing) | High-level system architecture, problem statement, metallurgical RAG rationale, and operational results. |
+| **Platform Video Demonstration** | [YouTube Video Walkthrough](https://youtu.be/r08QByG-3Pk) | Live demonstration of the automated inspection pipeline, detection visualization, grounded diagnosis, and interactive assistant. |
 
 ---
 
